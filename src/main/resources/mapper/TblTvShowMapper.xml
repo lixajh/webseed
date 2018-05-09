@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.peake.webseed.dao.TblTvShowMapper">
+  <resultMap id="BaseResultMap" type="com.peake.webseed.model.TblTvShow">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="pk_global_id" jdbcType="VARCHAR" property="pkGlobalId" />
+    <result column="m_date" jdbcType="DATE" property="mDate" />
+    <result column="audio" jdbcType="VARCHAR" property="audio" />
+    <result column="have_show" jdbcType="INTEGER" property="haveShow" />
+  </resultMap>
+
+  <select id="getList" resultType="java.lang.String">
+SELECT DATE_FORMAT(m_date,'%Y-%m-%d') date FROM tbl_tv_show WHERE PERIOD_DIFF( date_format( #{date} , '%Y%m' ) , date_format( m_date, '%Y%m' ) ) = -#{addMonth} and have_show = 1
+
+  </select>
+  <select id="getRecord" resultType="java.util.HashMap">
+    select DATE_FORMAT(m_date,'%Y-%m-%d') m_date,audio,pk_global_id from tbl_tv_show where m_date = #{date,jdbcType=VARCHAR}
+  </select>
+  <select id="getToday" resultType="com.peake.webseed.model.TblTvShow">
+    select  DATE_FORMAT(m_date,'%Y-%m-%d') mDate,audio,pk_global_id from tbl_tv_show where have_show=1 order by m_date desc LIMIT 1
+  </select>
+  <select id="getMinLeftOffset" resultType="Integer" >
+   select (PERIOD_DIFF(
+        date_format(m_date, '%Y%m'),
+		date_format(#{date}, '%Y%m')
+	))  offset
+ from
+	tbl_tv_show  where ((PERIOD_DIFF(
+		date_format(#{date}, '%Y%m'),
+		date_format(m_date, '%Y%m')
+	)) + #{oldOffset}) >= 0 and have_show = 1 order by offset desc limit 1
+  </select>
+<select id="getMinRightOffset" resultType="Integer" >
+   select (PERIOD_DIFF(
+        date_format(m_date, '%Y%m'),
+		date_format(#{date}, '%Y%m')
+	))  offset
+ from
+	tbl_tv_show  where ((PERIOD_DIFF(
+	date_format(m_date, '%Y%m'),
+		date_format(#{date}, '%Y%m')
+	)) - #{oldOffset}) >= 0 and have_show = 1  order by offset asc limit 1
+  </select>
+
+  <update id="enableRecordBeforeToday">
+    update
+    tbl_tv_show
+    set
+    have_show = 1
+    where
+    m_date &lt;= #{date}
+  </update>
+
+</mapper>

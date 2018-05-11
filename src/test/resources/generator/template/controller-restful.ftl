@@ -1,8 +1,8 @@
-package ${basePackage}.${modelPackage}.controller;
+package ${featurePackage}.${modelPackage}.controller;
 import ${basePackage}.core.Result;
 import ${basePackage}.core.ResultGenerator;
-import ${basePackage}.${modelPackage}.model.${modelNameUpperCamel};
-import ${basePackage}.${modelPackage}.service.${modelNameUpperCamel}Service;
+import ${featurePackage}.${modelPackage}.model.${modelNameUpperCamel};
+import ${featurePackage}.${modelPackage}.service.${modelNameUpperCamel}Service;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.*;

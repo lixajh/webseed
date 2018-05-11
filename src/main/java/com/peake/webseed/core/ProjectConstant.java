@@ -5,7 +5,7 @@ package com.peake.webseed.core;
  */
 public final class ProjectConstant {
     public static final String BASE_PACKAGE = "com.peake.webseed";//项目基础包名称，根据自己公司的项目修改
-
+    public static final String FEATURE_PACKAGE=BASE_PACKAGE + ".feature";
     public static final String MODEL_PACKAGE = BASE_PACKAGE + ".model";//Model所在包
     public static final String MAPPER_PACKAGE = BASE_PACKAGE + ".dao";//Mapper所在包
 //    public static final String SERVICE_PACKAGE = BASE_PACKAGE + ".service";//Service所在包

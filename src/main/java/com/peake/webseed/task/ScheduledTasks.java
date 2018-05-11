@@ -1,6 +1,5 @@
 package com.peake.webseed.task;
 
-import com.peake.webseed.service.TblTvShowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -14,12 +13,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ScheduledTasks {
-    @Autowired
-    private TblTvShowService tblTvShowService;
+//    @Autowired
+//    private TblTvShowService tblTvShowService;
 //0 0-5 0,6,12,18,23 * * ?
     @Scheduled(cron = "0 0-9 0,6,12,18,23 * * *")
     public void reportCurrentTime() {
-        tblTvShowService.enableRecordBeforeToday();
+
+//        tblTvShowService.enableRecordBeforeToday();
     }
 
 }

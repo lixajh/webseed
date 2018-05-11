@@ -39,7 +39,8 @@ public class CodeGenerator {
 
     public static void main(String[] args) {
         genCode(null, "tbl_sys_user");
-//        genCode("news", "tbl_tv_show");
+        genCode("news", "tbl_tv_show");
+        genCode("news", "tbl_news");
 //        genModelAndMapper("tbl_news",null);
         //genCodeByCustomModelName("输入表名","输入自定义Model名称");
     }
@@ -87,8 +88,8 @@ public class CodeGenerator {
         }
 
 
-        String modelPackage = BASE_PACKAGE + "." + packageName + ".model";
-        String mapperPackage = BASE_PACKAGE + "." + packageName + ".mapper";
+        String modelPackage = FEATURE_PACKAGE + "." + packageName + ".model";
+        String mapperPackage = FEATURE_PACKAGE + "." + packageName + ".mapper";
 
 
         Context context = new Context(ModelType.FLAT);
@@ -172,7 +173,7 @@ public class CodeGenerator {
         if (StringUtils.isEmpty(packageName)) {
             packageName = modelName;
         }
-        String servicePackage = BASE_PACKAGE + "." + packageName + ".service";
+        String servicePackage = FEATURE_PACKAGE + "." + packageName + ".service";
 
         String serviceImplPackage = servicePackage + ".impl";
         String servicePackagePath = packageConvertPath(servicePackage);
@@ -189,6 +190,7 @@ public class CodeGenerator {
             data.put("modelNameLowerCamel", tableNameConvertLowerCamel(modelName));
             data.put("modelPackage", packageName);
             data.put("basePackage", BASE_PACKAGE);
+            data.put("featurePackage", FEATURE_PACKAGE);
 
             File file = new File(PROJECT_PATH + JAVA_PATH + servicePackagePath + modelNameUpperCamel + "Service.java");
             if (!file.getParentFile().exists()) {
@@ -223,7 +225,7 @@ public class CodeGenerator {
         if (StringUtils.isEmpty(packageName)) {
             packageName = modelName;
         }
-        String controllerPackage = BASE_PACKAGE + "." + packageName + ".controller";
+        String controllerPackage = FEATURE_PACKAGE + "." + packageName + ".controller";
 
         try {
             freemarker.template.Configuration cfg = getConfiguration();
@@ -237,6 +239,7 @@ public class CodeGenerator {
             data.put("modelNameLowerCamel", CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, modelNameUpperCamel));
             data.put("modelPackage", packageName);
             data.put("basePackage", BASE_PACKAGE);
+            data.put("featurePackage", FEATURE_PACKAGE);
 
             String controllerPackagePath = packageConvertPath(controllerPackage);
 

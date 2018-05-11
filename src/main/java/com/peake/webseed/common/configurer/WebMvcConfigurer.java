@@ -12,10 +12,13 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.web.bind.support.ConfigurableWebBindingInitializer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -28,8 +31,10 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,6 +53,8 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
     private final Logger logger = LoggerFactory.getLogger(WebMvcConfigurer.class);
     @Value("${spring.profiles.active}")
     private String env;//当前激活的配置文件
+    @Autowired
+    private RequestMappingHandlerAdapter handlerAdapter;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -215,5 +222,23 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", buildConfig());
         return new CorsFilter(source);
+    }
+
+
+    /**
+     * 增加字符串转日期的功能
+     */
+
+    @PostConstruct
+    public void initEditableAvlidation() {
+
+        ConfigurableWebBindingInitializer initializer = (ConfigurableWebBindingInitializer)handlerAdapter.getWebBindingInitializer();
+        if(initializer.getConversionService()!=null) {
+            GenericConversionService genericConversionService = (GenericConversionService)initializer.getConversionService();
+
+            genericConversionService.addConverter(new DateConverterConfig());
+
+        }
+
     }
 }

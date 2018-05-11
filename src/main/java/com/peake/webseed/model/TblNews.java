@@ -5,7 +5,6 @@ import javax.persistence.*;
 
 @Table(name = "tbl_news")
 public class TblNews {
-    public static final String mDateFeild="m_date";
     @Id
     @Column(name = "pk_global_id")
     private String pkGlobalId;
@@ -32,6 +31,14 @@ public class TblNews {
 
     @Column(name = "news_md4")
     private String newsMd4;
+
+    private String host;
+
+    private String guest1;
+
+    private String guest2;
+
+    private String tags;
 
     /**
      * @return pk_global_id
@@ -171,5 +178,61 @@ public class TblNews {
      */
     public void setNewsMd4(String newsMd4) {
         this.newsMd4 = newsMd4;
+    }
+
+    /**
+     * @return host
+     */
+    public String getHost() {
+        return host;
+    }
+
+    /**
+     * @param host
+     */
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    /**
+     * @return guest1
+     */
+    public String getGuest1() {
+        return guest1;
+    }
+
+    /**
+     * @param guest1
+     */
+    public void setGuest1(String guest1) {
+        this.guest1 = guest1;
+    }
+
+    /**
+     * @return guest2
+     */
+    public String getGuest2() {
+        return guest2;
+    }
+
+    /**
+     * @param guest2
+     */
+    public void setGuest2(String guest2) {
+        this.guest2 = guest2;
+    }
+
+    /**
+     * @return tags
+     */
+    public String getTags() {
+        return tags;
+    }
+
+    /**
+     * @param tags
+     */
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 }

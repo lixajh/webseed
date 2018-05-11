@@ -15,6 +15,10 @@
     <result column="news_md2" jdbcType="VARCHAR" property="newsMd2" />
     <result column="news_md3" jdbcType="VARCHAR" property="newsMd3" />
     <result column="news_md4" jdbcType="VARCHAR" property="newsMd4" />
+    <result column="host" jdbcType="VARCHAR" property="host" />
+    <result column="guest1" jdbcType="VARCHAR" property="guest1" />
+    <result column="guest2" jdbcType="VARCHAR" property="guest2" />
+    <result column="tags" jdbcType="VARCHAR" property="tags" />
   </resultMap>
 
   <select id="findByDate" resultType="com.peake.webseed.model.TblNews">

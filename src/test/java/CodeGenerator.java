@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.peake.webseed.core.ProjectConstant.*;
+
 /**
  * 代码生成器，根据数据表名称生成对应的Model、Mapper、Service、Controller简化开发。
  */
@@ -27,43 +29,68 @@ public class CodeGenerator {
     private static final String JAVA_PATH = "/src/main/java"; //java文件路径
     private static final String RESOURCES_PATH = "/src/main/resources";//资源文件路径
 
-    private static final String PACKAGE_PATH_SERVICE = packageConvertPath(SERVICE_PACKAGE);//生成的Service存放路径
-    private static final String PACKAGE_PATH_SERVICE_IMPL = packageConvertPath(SERVICE_IMPL_PACKAGE);//生成的Service实现存放路径
-    private static final String PACKAGE_PATH_CONTROLLER = packageConvertPath(CONTROLLER_PACKAGE);//生成的Controller存放路径
+//    private static final String PACKAGE_PATH_SERVICE = packageConvertPath(SERVICE_PACKAGE);//生成的Service存放路径
+//    private static final String PACKAGE_PATH_SERVICE_IMPL = packageConvertPath(SERVICE_IMPL_PACKAGE);//生成的Service实现存放路径
+//    private static final String PACKAGE_PATH_CONTROLLER = packageConvertPath(CONTROLLER_PACKAGE);//生成的Controller存放路径
 
     private static final String AUTHOR = "CodeGenerator";//@author
+    private static final String TBL_PREFIX = "tbl_";//@author
     private static final String DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());//@date
 
     public static void main(String[] args) {
-        genCode("tbl_tv_show");
+        genCode(null, "tbl_sys_user");
+//        genCode("news", "tbl_tv_show");
+//        genModelAndMapper("tbl_news",null);
         //genCodeByCustomModelName("输入表名","输入自定义Model名称");
     }
 
     /**
      * 通过数据表名称生成代码，Model 名称通过解析数据表名称获得，下划线转大驼峰的形式。
      * 如输入表名称 "t_user_detail" 将生成 TUserDetail、TUserDetailMapper、TUserDetailService ...
+     *
      * @param tableNames 数据表名称...
      */
-    public static void genCode(String... tableNames) {
+    public static void genCode(String packageName, String... tableNames) {
         for (String tableName : tableNames) {
-            genCodeByCustomModelName(tableName, null);
+            genCodeByCustomModelName(tableName, null, packageName);
         }
     }
 
     /**
      * 通过数据表名称，和自定义的 Model 名称生成代码
      * 如输入表名称 "t_user_detail" 和自定义的 Model 名称 "User" 将生成 User、UserMapper、UserService ...
+     *
      * @param tableName 数据表名称
      * @param modelName 自定义的 Model 名称
      */
     public static void genCodeByCustomModelName(String tableName, String modelName) {
-        genModelAndMapper(tableName, modelName);
-        genService(tableName, modelName);
-        genController(tableName, modelName);
+        genCodeByCustomModelName(tableName, modelName, null);
     }
 
+    public static void genCodeByCustomModelName(String tableName, String modelName, String packageName) {
+        genModelAndMapper(tableName, modelName, packageName);
+        genService(tableName, modelName, packageName);
+        genController(tableName, modelName, packageName);
+    }
 
     public static void genModelAndMapper(String tableName, String modelName) {
+        genModelAndMapper(tableName, modelName, null);
+    }
+
+    public static void genModelAndMapper(String tableName, String modelName, String packageName) {
+        if (StringUtils.isEmpty(modelName)) {
+            String tmpTableName = tableName.replace(TBL_PREFIX, "");
+            modelName = tableNameConvertLowerCamel(tmpTableName);
+        }
+        if (StringUtils.isEmpty(packageName)) {
+            packageName = modelName;
+        }
+
+
+        String modelPackage = BASE_PACKAGE + "." + packageName + ".model";
+        String mapperPackage = BASE_PACKAGE + "." + packageName + ".mapper";
+
+
         Context context = new Context(ModelType.FLAT);
         context.setId("Potato");
         context.setTargetRuntime("MyBatis3Simple");
@@ -84,7 +111,8 @@ public class CodeGenerator {
 
         JavaModelGeneratorConfiguration javaModelGeneratorConfiguration = new JavaModelGeneratorConfiguration();
         javaModelGeneratorConfiguration.setTargetProject(PROJECT_PATH + JAVA_PATH);
-        javaModelGeneratorConfiguration.setTargetPackage(MODEL_PACKAGE);
+        javaModelGeneratorConfiguration.setTargetPackage(modelPackage);
+
         context.setJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration);
 
         SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
@@ -94,13 +122,15 @@ public class CodeGenerator {
 
         JavaClientGeneratorConfiguration javaClientGeneratorConfiguration = new JavaClientGeneratorConfiguration();
         javaClientGeneratorConfiguration.setTargetProject(PROJECT_PATH + JAVA_PATH);
-        javaClientGeneratorConfiguration.setTargetPackage(MAPPER_PACKAGE);
+        javaClientGeneratorConfiguration.setTargetPackage(mapperPackage);
+
         javaClientGeneratorConfiguration.setConfigurationType("XMLMAPPER");
         context.setJavaClientGeneratorConfiguration(javaClientGeneratorConfiguration);
 
         TableConfiguration tableConfiguration = new TableConfiguration(context);
         tableConfiguration.setTableName(tableName);
-        if (StringUtils.isNotEmpty(modelName))tableConfiguration.setDomainObjectName(modelName);
+        if (StringUtils.isNotEmpty(modelName))
+            tableConfiguration.setDomainObjectName(tableNameConvertUpperCamel(modelName));
         tableConfiguration.setGeneratedKey(new GeneratedKey("id", "Mysql", true, null));
         context.addTableConfiguration(tableConfiguration);
 
@@ -130,18 +160,37 @@ public class CodeGenerator {
     }
 
     public static void genService(String tableName, String modelName) {
+        genService(tableName, modelName, null);
+    }
+
+    public static void genService(String tableName, String modelName, String packageName) {
+        if (StringUtils.isEmpty(modelName)) {
+            String tmpTableName = tableName.replace(TBL_PREFIX, "");
+            modelName = tableNameConvertLowerCamel(tmpTableName);
+        }
+
+        if (StringUtils.isEmpty(packageName)) {
+            packageName = modelName;
+        }
+        String servicePackage = BASE_PACKAGE + "." + packageName + ".service";
+
+        String serviceImplPackage = servicePackage + ".impl";
+        String servicePackagePath = packageConvertPath(servicePackage);
+        String serviceImplPackagePath = packageConvertPath(serviceImplPackage);
+
         try {
             freemarker.template.Configuration cfg = getConfiguration();
 
             Map<String, Object> data = new HashMap<>();
             data.put("date", DATE);
             data.put("author", AUTHOR);
-            String modelNameUpperCamel = StringUtils.isEmpty(modelName) ? tableNameConvertUpperCamel(tableName) : modelName;
+            String modelNameUpperCamel = tableNameConvertUpperCamel(modelName);
             data.put("modelNameUpperCamel", modelNameUpperCamel);
-            data.put("modelNameLowerCamel", tableNameConvertLowerCamel(tableName));
+            data.put("modelNameLowerCamel", tableNameConvertLowerCamel(modelName));
+            data.put("modelPackage", packageName);
             data.put("basePackage", BASE_PACKAGE);
 
-            File file = new File(PROJECT_PATH + JAVA_PATH + PACKAGE_PATH_SERVICE + modelNameUpperCamel + "Service.java");
+            File file = new File(PROJECT_PATH + JAVA_PATH + servicePackagePath + modelNameUpperCamel + "Service.java");
             if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }
@@ -149,7 +198,7 @@ public class CodeGenerator {
                     new FileWriter(file));
             System.out.println(modelNameUpperCamel + "Service.java 生成成功");
 
-            File file1 = new File(PROJECT_PATH + JAVA_PATH + PACKAGE_PATH_SERVICE_IMPL + modelNameUpperCamel + "ServiceImpl.java");
+            File file1 = new File(PROJECT_PATH + JAVA_PATH + serviceImplPackagePath + modelNameUpperCamel + "ServiceImpl.java");
             if (!file1.getParentFile().exists()) {
                 file1.getParentFile().mkdirs();
             }
@@ -162,19 +211,36 @@ public class CodeGenerator {
     }
 
     public static void genController(String tableName, String modelName) {
+        genController(tableName, modelName, null);
+    }
+
+    public static void genController(String tableName, String modelName, String packageName) {
+
+        if (StringUtils.isEmpty(modelName)) {
+            String tmpTableName = tableName.replace(TBL_PREFIX, "");
+            modelName = tableNameConvertLowerCamel(tmpTableName);
+        }
+        if (StringUtils.isEmpty(packageName)) {
+            packageName = modelName;
+        }
+        String controllerPackage = BASE_PACKAGE + "." + packageName + ".controller";
+
         try {
             freemarker.template.Configuration cfg = getConfiguration();
 
             Map<String, Object> data = new HashMap<>();
             data.put("date", DATE);
             data.put("author", AUTHOR);
-            String modelNameUpperCamel = StringUtils.isEmpty(modelName) ? tableNameConvertUpperCamel(tableName) : modelName;
+            String modelNameUpperCamel = tableNameConvertUpperCamel(modelName);
             data.put("baseRequestMapping", modelNameConvertMappingPath(modelNameUpperCamel));
             data.put("modelNameUpperCamel", modelNameUpperCamel);
             data.put("modelNameLowerCamel", CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, modelNameUpperCamel));
+            data.put("modelPackage", packageName);
             data.put("basePackage", BASE_PACKAGE);
 
-            File file = new File(PROJECT_PATH + JAVA_PATH + PACKAGE_PATH_CONTROLLER + modelNameUpperCamel + "Controller.java");
+            String controllerPackagePath = packageConvertPath(controllerPackage);
+
+            File file = new File(PROJECT_PATH + JAVA_PATH + controllerPackagePath + modelNameUpperCamel + "Controller.java");
             if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }

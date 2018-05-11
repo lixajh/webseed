@@ -13,12 +13,12 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @EnableTransactionManagement
 @ServletComponentScan
-//@MapperScan("com.peake.**")
+@MapperScan("com.peake.**.mapper")
 @SpringBootApplication
 @EnableCaching
 @EnableScheduling
 @EnableSwagger2
-@ComponentScan("/")
+//@ComponentScan("/")
 @EnableWebMvc
 public class Application {
     public static void main(String[] args) {

@@ -5,6 +5,9 @@ import com.peake.webseed.sysUser.model.Sysuser;
 import com.peake.webseed.sysUser.service.SysuserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,12 +19,15 @@ import java.util.List;
 /**
 * Created by CodeGenerator on 2018/05/11.
 */
+@Api(value="/sysuser", tags="用户模块")
 @RestController
 @RequestMapping("/sysuser")
 public class SysuserController {
     @Resource
     private SysuserService sysuserService;
 
+    @ApiOperation(value="/sysuser", notes="用户模块")
+    @ApiImplicitParam(value="sysuser", name="用户模块" ,dataType="Sysuser")
     @PostMapping("/add")
     public Result add(Sysuser sysuser) {
         sysuserService.save(sysuser);

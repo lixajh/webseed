@@ -1,6 +1,7 @@
 package com.peake.webseed.utils;
 
 public class Constant {
+
     //演示系统账户
     public static String DEMO_ACCOUNT = "test";
     //自动去除表前缀

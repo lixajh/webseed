@@ -18,8 +18,8 @@ import static com.peake.webseed.core.ProjectConstant.*;
  */
 public class CodeGenerator {
     //JDBC配置，请修改为你项目的实际配置
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/webseed";
-    private static final String JDBC_USERNAME = "root";
+    private static final String JDBC_URL = "jdbc:mysql://118.24.155.154:3306/webseed?allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&useSSL=false";
+    private static final String JDBC_USERNAME = "admin";
     private static final String JDBC_PASSWORD = "123456";
     private static final String JDBC_DIVER_CLASS_NAME = "com.mysql.jdbc.Driver";
 
@@ -38,9 +38,9 @@ public class CodeGenerator {
     private static final String DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());//@date
 
     public static void main(String[] args) {
-        genCode(null, "tbl_sys_user");
-        genCode("news", "tbl_tv_show");
-        genCode("news", "tbl_news");
+        genCode(null, "tbl_admin");
+//        genCode("news", "tbl_tv_show");
+//        genCode("news", "tbl_news");
 //        genModelAndMapper("tbl_news",null);
         //genCodeByCustomModelName("输入表名","输入自定义Model名称");
     }
@@ -117,8 +117,8 @@ public class CodeGenerator {
         context.setJavaModelGeneratorConfiguration(javaModelGeneratorConfiguration);
 
         SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
-        sqlMapGeneratorConfiguration.setTargetProject(PROJECT_PATH + RESOURCES_PATH);
-        sqlMapGeneratorConfiguration.setTargetPackage("mapper");
+        sqlMapGeneratorConfiguration.setTargetProject(PROJECT_PATH + JAVA_PATH);
+        sqlMapGeneratorConfiguration.setTargetPackage(modelPackage);
         context.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
 
         JavaClientGeneratorConfiguration javaClientGeneratorConfiguration = new JavaClientGeneratorConfiguration();

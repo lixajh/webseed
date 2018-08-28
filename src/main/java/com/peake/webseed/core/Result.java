@@ -8,9 +8,10 @@ import com.alibaba.fastjson.JSON;
 public class Result {
     private int code;
     private String message;
+    private int errorCode;
     private Object data;
 
-    public Result setCode(ResultCode resultCode) {
+    public Result setCode(EnumResultCode resultCode) {
         this.code = resultCode.code;
         return this;
     }
@@ -21,6 +22,12 @@ public class Result {
 
     public Result setCode(int code) {
         this.code = code;
+        return this;
+    }
+
+    public Result setErrorCode(EnumErrorCode enumErrorCode){
+        this.errorCode = enumErrorCode.getValue();
+        this.message = enumErrorCode.getDesc();
         return this;
     }
 

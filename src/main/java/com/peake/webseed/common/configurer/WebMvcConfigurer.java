@@ -6,7 +6,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4;
 import com.peake.webseed.core.Result;
-import com.peake.webseed.core.ResultCode;
+import com.peake.webseed.core.EnumResultCode;
 import com.peake.webseed.core.ServiceException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +32,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
@@ -86,14 +85,14 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
             public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception e) {
                 Result result = new Result();
                 if (e instanceof ServiceException) {//业务失败的异常，如“账号或密码错误”
-                    result.setCode(ResultCode.FAIL).setMessage(e.getMessage());
+                    result.setCode(EnumResultCode.FAIL).setMessage(e.getMessage());
                     logger.info(e.getMessage());
                 } else if (e instanceof NoHandlerFoundException) {
-                    result.setCode(ResultCode.NOT_FOUND).setMessage("接口 [" + request.getRequestURI() + "] 不存在");
+                    result.setCode(EnumResultCode.NOT_FOUND).setMessage("接口 [" + request.getRequestURI() + "] 不存在");
                 } else if (e instanceof ServletException) {
-                    result.setCode(ResultCode.FAIL).setMessage(e.getMessage());
+                    result.setCode(EnumResultCode.FAIL).setMessage(e.getMessage());
                 } else {
-                    result.setCode(ResultCode.INTERNAL_SERVER_ERROR).setMessage("接口 [" + request.getRequestURI() + "] 内部错误，请联系管理员");
+                    result.setCode(EnumResultCode.INTERNAL_SERVER_ERROR).setMessage("接口 [" + request.getRequestURI() + "] 内部错误，请联系管理员");
                     String message;
                     if (handler instanceof HandlerMethod) {
                         HandlerMethod handlerMethod = (HandlerMethod) handler;
@@ -137,7 +136,7 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
                                 request.getRequestURI(), getIpAddress(request), JSON.toJSONString(request.getParameterMap()));
 
                         Result result = new Result();
-                        result.setCode(ResultCode.UNAUTHORIZED).setMessage("签名认证失败");
+                        result.setCode(EnumResultCode.UNAUTHORIZED).setMessage("签名认证失败");
                         responseResult(response, result);
                         return false;
                     }

@@ -1,12 +1,14 @@
 package com.peake.webseed.core;
 
 
+import com.peake.webseed.utils.DateUtils;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.entity.Condition;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -71,5 +73,9 @@ public abstract class AbstractService<T> implements Service<T> {
 
     public List<T> findAll() {
         return mapper.selectAll();
+    }
+
+    public Date now(){
+        return DateUtils.now();
     }
 }

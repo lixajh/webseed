@@ -94,4 +94,8 @@ public class DateUtils {
         return dateString;
     }
 
+    public static Date now(){
+        return new Date();
+    }
+
 }

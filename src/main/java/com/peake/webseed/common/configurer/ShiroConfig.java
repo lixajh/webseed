@@ -3,14 +3,19 @@ package com.peake.webseed.common.configurer;
 //import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 
 import com.peake.webseed.common.shiro.BDSessionListener;
-import com.peake.webseed.common.shiro.UserRealm;
+import com.peake.webseed.feature.admin.realm.AdminRealm;
 import com.peake.webseed.shiro.RedisCacheManager;
 import com.peake.webseed.shiro.RedisManager;
 import com.peake.webseed.shiro.RedisSessionDAO;
 import com.peake.webseed.utils.Constant;
+import com.peake.webseed.utils.PasswordUtils;
 import net.sf.ehcache.CacheManager;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
+import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.SessionListener;
 import org.apache.shiro.session.mgt.eis.MemorySessionDAO;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
@@ -26,6 +31,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 //import org.apache.shiro.cache.CacheManager;
 
@@ -93,12 +99,52 @@ public class ShiroConfig {
         return shiroFilterFactoryBean;
     }
 
+    /**
+     * 系统自带的Realm管理，主要针对多realm
+     * */
+    @Bean
+    public ModularRealmAuthenticator modularRealmAuthenticator(){
+        //自己重写的ModularRealmAuthenticator
+        ModularRealmAuthenticator modularRealmAuthenticator=new ModularRealmAuthenticator();
+        modularRealmAuthenticator.setAuthenticationStrategy(new AtLeastOneSuccessfulStrategy());
+        return modularRealmAuthenticator;
+    }
+
+    /**
+     * 密码校验规则HashedCredentialsMatcher
+     * 这个类是为了对密码进行编码的 ,
+     * 防止密码在数据库里明码保存 , 当然在登陆认证的时候 ,
+     * 这个类也负责对form里输入的密码进行编码
+     * 处理认证匹配处理器：如果自定义需要实现继承HashedCredentialsMatcher
+     */
+    @Bean("hashedCredentialsMatcher")
+    public HashedCredentialsMatcher hashedCredentialsMatcher() {
+        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
+        //指定加密方式为MD5
+        credentialsMatcher.setHashAlgorithmName(PasswordUtils.getAlgorithmName());
+        //加密次数
+        credentialsMatcher.setHashIterations(PasswordUtils.getHashIterations());
+        credentialsMatcher.setStoredCredentialsHexEncoded(true);
+        return credentialsMatcher;
+    }
+
+    @Bean
+    public AdminRealm adminRealm(){
+        AdminRealm adminRealm = new AdminRealm();
+        adminRealm.setCredentialsMatcher(hashedCredentialsMatcher());
+        return adminRealm;
+    }
 
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         //设置realm.
-        securityManager.setRealm(userRealm());
+        securityManager.setAuthenticator(modularRealmAuthenticator());
+        List<Realm> realms = new ArrayList<>();
+        //添加多个Realm
+        realms.add(adminRealm());
+
+        securityManager.setRealms(realms);
         // 自定义缓存实现 使用redis
         if (Constant.CACHE_TYPE_REDIS.equals(cacheType)) {
             securityManager.setCacheManager(cacheManager());
@@ -109,11 +155,7 @@ public class ShiroConfig {
         return securityManager;
     }
 
-    @Bean
-    UserRealm userRealm() {
-        UserRealm userRealm = new UserRealm();
-        return userRealm;
-    }
+
 
     /**
      * 开启shiro aop注解支持.

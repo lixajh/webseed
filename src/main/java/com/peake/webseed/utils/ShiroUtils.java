@@ -1,6 +1,8 @@
 package com.peake.webseed.utils;
 
 
+import com.peake.webseed.common.dto.UserDTO;
+import com.peake.webseed.common.enums.EnumUserType;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.subject.Subject;
@@ -13,20 +15,28 @@ public class ShiroUtils {
     public static Subject getSubjct() {
         return SecurityUtils.getSubject();
     }
-//    public static UserDO getUser() {
-//        Object object = getSubjct().getPrincipal();
-//        return (UserDO)object;
-//    }
-//    public static Long getUserId() {
-//        return getUser().getUserId();
-//    }
+
+    public static Long getUserId() {
+        Subject currentUser = getSubjct();
+        if (null == currentUser) {
+            return null;
+        }
+        UserDTO user = (UserDTO) currentUser.getPrincipal();
+        if (user.getId() != null) {
+            return user.getId();
+        }
+        return null;
+    }
+
+    public static EnumUserType getUserType(){
+
+            UserDTO user = (UserDTO) getSubjct().getPrincipal();
+            return user.getUserType();
+    }
+
     public static void logout() {
         getSubjct().logout();
     }
 
-//    public static List<Principal> getPrinciples() {
-//        List<Principal> principals = null;
-//        Collection<Session> sessions = sessionDAO.getActiveSessions();
-//        return principals;
-//    }
+
 }

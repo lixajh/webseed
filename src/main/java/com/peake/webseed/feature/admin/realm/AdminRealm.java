@@ -1,7 +1,9 @@
 package com.peake.webseed.feature.admin.realm;
 
 
+import com.peake.webseed.common.dto.UserDTO;
 import com.peake.webseed.common.enums.EnumDataStatus;
+import com.peake.webseed.common.enums.EnumUserType;
 import com.peake.webseed.feature.admin.model.Admin;
 import com.peake.webseed.feature.admin.service.AdminService;
 import org.apache.shiro.authc.*;
@@ -52,7 +54,7 @@ public class AdminRealm extends AuthorizingRealm {
 		}
 
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
-                admin.getPkId(), admin.getPassword(), //密码
+                new UserDTO(admin.getPkId(),EnumUserType.manager), admin.getPassword(), //密码
                 ByteSource.Util.bytes(admin.getSalt()), //
                 getName() //realm name
         );

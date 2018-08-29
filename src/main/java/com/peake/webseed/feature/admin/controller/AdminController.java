@@ -7,6 +7,7 @@ import com.peake.webseed.core.Result;
 import com.peake.webseed.core.ResultGenerator;
 import com.peake.webseed.feature.admin.model.Admin;
 import com.peake.webseed.feature.admin.service.AdminService;
+import com.peake.webseed.utils.ShiroUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,8 +49,14 @@ public class AdminController {
         }
     }
 
+    @PostMapping("/logout")
+    public Result logout() {
+        ShiroUtils.logout();
+        return ResultGenerator.genSuccessResult();
+    }
+
     @PostMapping("/delete")
-    public Result delete(@RequestParam Integer id) {
+    public Result delete(@RequestParam Long id) {
         adminService.deleteById(id);
         return ResultGenerator.genSuccessResult();
     }
@@ -61,7 +68,7 @@ public class AdminController {
     }
 
     @PostMapping("/detail")
-    public Result detail(@RequestParam Integer id) {
+    public Result detail(@RequestParam Long id) {
         Admin admin = adminService.findById(id);
         return ResultGenerator.genSuccessResult(admin);
     }

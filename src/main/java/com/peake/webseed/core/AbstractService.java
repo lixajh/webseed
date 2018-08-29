@@ -1,6 +1,8 @@
 package com.peake.webseed.core;
 
 
+import com.peake.webseed.common.redis.CacheService;
+import com.peake.webseed.feature.admin.model.Admin;
 import com.peake.webseed.utils.DateUtils;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,10 @@ public abstract class AbstractService<T> implements Service<T> {
 
     private Class<T> modelClass;    // 当前泛型真实类型的Class
 
+    @Autowired
+    CacheService cacheService;
+
+
     public AbstractService() {
         ParameterizedType pt = (ParameterizedType) this.getClass().getGenericSuperclass();
         modelClass = (Class<T>) pt.getActualTypeArguments()[0];
@@ -34,7 +40,7 @@ public abstract class AbstractService<T> implements Service<T> {
         mapper.insertList(models);
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         mapper.deleteByPrimaryKey(id);
     }
 
@@ -46,7 +52,7 @@ public abstract class AbstractService<T> implements Service<T> {
         mapper.updateByPrimaryKeySelective(model);
     }
 
-    public T findById(Integer id) {
+    public T findById(Long id) {
         return mapper.selectByPrimaryKey(id);
     }
 
@@ -78,4 +84,9 @@ public abstract class AbstractService<T> implements Service<T> {
     public Date now(){
         return DateUtils.now();
     }
+
+    protected Admin getAdmin(){
+        return cacheService.getAdminInfo();
+    }
+
 }

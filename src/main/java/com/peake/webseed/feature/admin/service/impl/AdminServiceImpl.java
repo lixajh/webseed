@@ -51,8 +51,6 @@ public class AdminServiceImpl extends AbstractService<Admin> implements AdminSer
         admin.setCreateTime(now());
         admin.setDataStatus(EnumDataStatus.normal.getValue());
         save(admin);
-        long id = admin.getPkId();
-        System.out.println("___________id:" + id);
         return ResultGenerator.genSuccessResult();
     };
 }

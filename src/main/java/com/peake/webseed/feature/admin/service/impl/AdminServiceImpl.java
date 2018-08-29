@@ -13,6 +13,8 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,9 @@ import javax.annotation.Resource;
 @Service
 @Transactional
 public class AdminServiceImpl extends AbstractService<Admin> implements AdminService {
+
+    Logger logger = LoggerFactory.getLogger(AdminServiceImpl.class);
+
     @Resource
     private AdminMapper adminMapper;
 
@@ -36,10 +41,15 @@ public class AdminServiceImpl extends AbstractService<Admin> implements AdminSer
         try {
             currentUser.login(token);
         } catch (AuthenticationException e) {
+            logger.error(e.getMessage());
             return ResultGenerator.genFailResult(e.getMessage());
         } catch (AuthorizationException e) {
             return ResultGenerator.genFailResult(e.getMessage());
         }
+        Admin admin = getAdmin();
+        admin.setLastLoginTime(now());
+        admin.setUpdateTime(now());
+        update(admin);
         return ResultGenerator.genSuccessResult();
     };
 

@@ -1,10 +1,7 @@
 package com.peake.webseed.feature.admin.model;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
+import javax.persistence.*;
 
 @Table(name = "tbl_admin")
 public class Admin {
@@ -33,8 +30,8 @@ public class Admin {
     @Column(name = "last_login_time")
     private Date lastLoginTime;
 
-    @Column(name = "lupdate_time")
-    private Date lupdateTime;
+    @Column(name = "update_time")
+    private Date updateTime;
 
     @Column(name = "create_time")
     private Date createTime;
@@ -156,17 +153,17 @@ public class Admin {
     }
 
     /**
-     * @return lupdate_time
+     * @return update_time
      */
-    public Date getLupdateTime() {
-        return lupdateTime;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
     /**
-     * @param lupdateTime
+     * @param updateTime
      */
-    public void setLupdateTime(Date lupdateTime) {
-        this.lupdateTime = lupdateTime;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     /**

@@ -26,6 +26,7 @@ public class ResultGenerator {
     }
     public static Result genFailResult(EnumErrorCode errorCode) {
         return new Result()
+                .setCode(EnumResultCode.FAIL)
                 .setErrorCode(errorCode);
     }
     public static Result genNotAuthResult(){

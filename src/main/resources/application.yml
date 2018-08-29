@@ -1,4 +1,5 @@
 server:
+  context-path: /server
   session-timeout: 1800
 #    tomcat:
 #        max-threads: 1000
@@ -35,6 +36,7 @@ spring:
     add-mappings: false
   mvc:
     throw-exception-if-no-handler-found: true
+    dispatch-options-request: true
 mybatis:
   configuration:
     map-underscore-to-camel-case: true

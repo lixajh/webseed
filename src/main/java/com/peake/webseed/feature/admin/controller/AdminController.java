@@ -73,7 +73,7 @@ public class AdminController extends AbstractController {
     }
 
     @PostMapping("/list")
-    public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,Admin admin) {
+    public Result list(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size,Admin admin) {
 
         PageInfo pageInfo = adminService.findbyPage(page,size,"username",admin);
         return ResultGenerator.genSuccessResult(pageInfo);

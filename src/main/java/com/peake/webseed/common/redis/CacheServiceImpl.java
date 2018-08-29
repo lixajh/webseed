@@ -26,17 +26,24 @@ public class CacheServiceImpl extends RedisServiceImpl implements CacheService {
         if (userId == null) {
             return null;
         }
-        Object o = get(ADMIN_INFO_KEY + userId);
-        if (o != null) {
-            Admin admin = (Admin) o;
-            return admin;
-        } else {
-            Admin admin1 = adminService.findById(userId);
-            if (admin1 != null) {
-
-                set(ADMIN_INFO_KEY + userId, admin1, EXPRIE_TIME);
+        try{
+            Object o = get(ADMIN_INFO_KEY + userId);
+            if (o != null) {
+                Admin admin = (Admin) o;
+                return admin;
+            } else {
+               return adminFromDb(userId);
             }
-            return admin1;
+        }catch (Exception e){
+            return adminFromDb(userId);
         }
+    }
+
+    private Admin adminFromDb(Long userId){
+        Admin admin1 = adminService.findById(userId);
+        if (admin1 != null) {
+            set(ADMIN_INFO_KEY + userId, admin1, EXPRIE_TIME);
+        }
+        return admin1;
     }
 }

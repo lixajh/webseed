@@ -67,8 +67,8 @@ public class AdminController extends AbstractController {
     }
 
     @PostMapping("/detail")
-    public Result detail(@RequestParam Long id) {
-        Admin admin = adminService.findById(id);
+    public Result detail() {
+        Admin admin = adminService.findById(getAdmin().getPkId());
         return ResultGenerator.genSuccessResult(admin);
     }
 

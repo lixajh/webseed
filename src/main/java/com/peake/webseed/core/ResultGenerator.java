@@ -28,4 +28,9 @@ public class ResultGenerator {
         return new Result()
                 .setErrorCode(errorCode);
     }
+    public static Result genNotAuthResult(){
+        return new Result()
+                .setCode(EnumResultCode.UNAUTHORIZED)
+                .setMessage("未登录");
+    }
 }

@@ -45,7 +45,10 @@ public class AdminServiceImpl extends AbstractService<Admin> implements AdminSer
 
     @Override
     public Result add(Admin admin) {
-
+        Admin oldAdmin = findBy("username", admin.getUsername());
+        if(oldAdmin != null && oldAdmin.getDataStatus() != EnumDataStatus.del.getValue()){
+            return ResultGenerator.genFailResult("该用户名已被注册");
+        }
         admin.setSalt(PasswordUtils.getRanSalt());
         admin.setPassword(PasswordUtils.generatePassword(PasswordUtils.DEFAULT_PASSWORD,admin.getSalt()));
         admin.setCreateTime(now());

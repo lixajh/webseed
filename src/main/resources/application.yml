@@ -24,10 +24,13 @@ spring:
   devtools:
     restart:
       enabled: true
+#  cache:
+#    type: ehcache
+#    ehcache:
+#      config: config/ehcache.xml
   cache:
-    type: ehcache
-    ehcache:
-      config: config/ehcache.xml
+      type: redis
+
   resources:
     add-mappings: false
   mvc:

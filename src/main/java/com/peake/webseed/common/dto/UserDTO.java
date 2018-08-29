@@ -2,7 +2,9 @@ package com.peake.webseed.common.dto;
 
 import com.peake.webseed.common.enums.EnumUserType;
 
-public class UserDTO {
+import java.io.Serializable;
+
+public class UserDTO implements Serializable {
     Long id;
     EnumUserType userType;
 

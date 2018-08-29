@@ -1,7 +1,7 @@
 package com.peake.webseed.feature.admin.controller;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.peake.webseed.core.AbstractController;
 import com.peake.webseed.core.EnumErrorCode;
 import com.peake.webseed.core.Result;
 import com.peake.webseed.core.ResultGenerator;
@@ -15,20 +15,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
-* Created by CodeGenerator on 2018/08/29.
-*/
+ * Created by CodeGenerator on 2018/08/29.
+ */
 @RestController
 @RequestMapping("/manager/admin")
-public class AdminController {
+public class AdminController extends AbstractController {
     @Resource
     private AdminService adminService;
 
 
     @PostMapping("/login")
     public Result login(String username, String password) {
+        if (ShiroUtils.getSubjct().isAuthenticated()) {
+            return ResultGenerator.genSuccessResult();
+        }
         if (StringUtils.isNoneBlank(username, password)) {
             password = password.toLowerCase();
             return adminService.login(username, password);
@@ -40,10 +42,7 @@ public class AdminController {
     @PostMapping("/add")
     public Result add(Admin admin) {
         if (StringUtils.isNoneBlank(admin.getUsername())) {
-
-            adminService.add(admin);
-
-            return ResultGenerator.genSuccessResult();
+            return adminService.add(admin);
         } else {
             return ResultGenerator.genFailResult(EnumErrorCode.PARAM_ERROR);
         }
@@ -74,10 +73,9 @@ public class AdminController {
     }
 
     @PostMapping("/list")
-    public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
-        PageHelper.startPage(page, size);
-        List<Admin> list = adminService.findAll();
-        PageInfo pageInfo = new PageInfo(list);
+    public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size,Admin admin) {
+
+        PageInfo pageInfo = adminService.findbyPage(page,size,"username",admin);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 }

@@ -1,12 +1,15 @@
 package com.peake.webseed.core;
 
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.peake.webseed.common.redis.CacheService;
 import com.peake.webseed.feature.admin.model.Admin;
 import com.peake.webseed.utils.DateUtils;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.entity.Condition;
+import tk.mybatis.mapper.entity.Example;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -79,6 +82,21 @@ public abstract class AbstractService<T> implements Service<T> {
 
     public List<T> findAll() {
         return mapper.selectAll();
+    }
+
+    public List<T> findByExample(Object o) {
+        return mapper.selectByExample(o);
+    }
+
+    @Override
+    public PageInfo findbyPage(Integer page, Integer size, String orderby, T o) {
+        Example example = new Example(Admin.class);
+        example.createCriteria().andNotEqualTo("dataStatus", -1);
+        example.orderBy(orderby);
+        PageHelper.startPage(page, size);
+        List<T> list = findByExample(example);
+        PageInfo pageInfo = new PageInfo(list);
+        return pageInfo;
     }
 
     public Date now(){

@@ -47,10 +47,8 @@ public class ${modelNameUpperCamel}Controller {
     }
 
     @PostMapping("/list")
-    public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
-        PageHelper.startPage(page, size);
-        List<${modelNameUpperCamel}> list = ${modelNameLowerCamel}Service.findAll();
-        PageInfo pageInfo = new PageInfo(list);
+    public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size, ${modelNameUpperCamel} ${modelNameLowerCamel}) {
+       PageInfo pageInfo = adminService.findbyPage(page,size,"username",${modelNameLowerCamel});
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 }

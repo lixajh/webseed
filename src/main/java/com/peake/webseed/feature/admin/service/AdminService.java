@@ -1,11 +1,12 @@
 package com.peake.webseed.feature.admin.service;
+
 import com.peake.webseed.core.Result;
-import com.peake.webseed.feature.admin.model.Admin;
 import com.peake.webseed.core.Service;
+import com.peake.webseed.feature.admin.model.Admin;
 
 
 /**
- * Created by CodeGenerator on 2018/08/28.
+ * Created by CodeGenerator on 2018/08/29.
  */
 public interface AdminService extends Service<Admin> {
     Result login(String username, String password);

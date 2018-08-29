@@ -7,7 +7,7 @@ import com.peake.webseed.core.Result;
 import com.peake.webseed.core.ResultGenerator;
 import com.peake.webseed.feature.admin.model.Admin;
 import com.peake.webseed.feature.admin.service.AdminService;
-import com.peake.webseed.utils.VerifyUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,42 +17,39 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
-* Created by CodeGenerator on 2018/08/28.
+* Created by CodeGenerator on 2018/08/29.
 */
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/manager/admin")
 public class AdminController {
     @Resource
     private AdminService adminService;
 
 
     @PostMapping("/login")
-    public Result login(String username,String password) {
-        if (VerifyUtils.verifyAllParamsNotNull(username,password)){
+    public Result login(String username, String password) {
+        if (StringUtils.isNoneBlank(username, password)) {
             password = password.toLowerCase();
-            return adminService.login(username,password);
-        }else{
+            return adminService.login(username, password);
+        } else {
             return ResultGenerator.genFailResult(EnumErrorCode.PARAM_ERROR);
         }
     }
 
     @PostMapping("/add")
     public Result add(Admin admin) {
-
-        if (VerifyUtils.verifyAllParamsNotNull(admin.getUsername())){
+        if (StringUtils.isNoneBlank(admin.getUsername())) {
 
             adminService.add(admin);
 
             return ResultGenerator.genSuccessResult();
-        }else{
+        } else {
             return ResultGenerator.genFailResult(EnumErrorCode.PARAM_ERROR);
         }
-
-
     }
 
     @PostMapping("/delete")
-    public Result delete(@RequestParam String id) {
+    public Result delete(@RequestParam Integer id) {
         adminService.deleteById(id);
         return ResultGenerator.genSuccessResult();
     }
@@ -64,7 +61,7 @@ public class AdminController {
     }
 
     @PostMapping("/detail")
-    public Result detail(@RequestParam String id) {
+    public Result detail(@RequestParam Integer id) {
         Admin admin = adminService.findById(id);
         return ResultGenerator.genSuccessResult(admin);
     }

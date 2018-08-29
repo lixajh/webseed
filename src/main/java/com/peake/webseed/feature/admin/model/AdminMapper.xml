@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <result column="pk_global_id" jdbcType="VARCHAR" property="pkGlobalId" />
+    <result column="pk_id" jdbcType="BIGINT" property="pkId" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="salt" jdbcType="VARCHAR" property="salt" />

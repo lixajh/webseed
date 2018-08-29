@@ -90,11 +90,13 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/upload/**", "anon");
         filterChainDefinitionMap.put("/files/**", "anon");
         filterChainDefinitionMap.put("/logout", "logout");
+        filterChainDefinitionMap.put("admin/logout", "anon");
+        filterChainDefinitionMap.put("/manager/admin/login", "anon");
         filterChainDefinitionMap.put("/", "anon");
         filterChainDefinitionMap.put("/blog", "anon");
         filterChainDefinitionMap.put("/blog/open/**", "anon");
-//        filterChainDefinitionMap.put("/**", "authc");
-        filterChainDefinitionMap.put("/**", "anon");
+        filterChainDefinitionMap.put("/**", "authc");
+//        filterChainDefinitionMap.put("/**", "anon");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }

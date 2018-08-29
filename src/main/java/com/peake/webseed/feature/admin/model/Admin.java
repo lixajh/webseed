@@ -1,6 +1,7 @@
 package com.peake.webseed.feature.admin.model;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
@@ -8,8 +9,9 @@ import java.util.Date;
 @Table(name = "tbl_admin")
 public class Admin {
     @Id
-    @Column(name = "pk_global_id")
-    private String pkGlobalId;
+    @GeneratedValue(generator = "JDBC")
+    @Column(name = "pk_id")
+    private Long pkId;
 
     private String username;
 
@@ -38,17 +40,17 @@ public class Admin {
     private Date createTime;
 
     /**
-     * @return pk_global_id
+     * @return pk_id
      */
-    public String getPkGlobalId() {
-        return pkGlobalId;
+    public Long getPkId() {
+        return pkId;
     }
 
     /**
-     * @param pkGlobalId
+     * @param pkId
      */
-    public void setPkGlobalId(String pkGlobalId) {
-        this.pkGlobalId = pkGlobalId;
+    public void setPkId(Long pkId) {
+        this.pkId = pkId;
     }
 
     /**

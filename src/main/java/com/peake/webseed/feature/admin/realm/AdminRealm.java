@@ -52,7 +52,7 @@ public class AdminRealm extends AuthorizingRealm {
 		}
 
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
-                admin.getPkGlobalId(), admin.getPassword(), //密码
+                admin.getPkId(), admin.getPassword(), //密码
                 ByteSource.Util.bytes(admin.getSalt()), //
                 getName() //realm name
         );

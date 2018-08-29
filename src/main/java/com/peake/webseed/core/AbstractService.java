@@ -34,7 +34,7 @@ public abstract class AbstractService<T> implements Service<T> {
         mapper.insertList(models);
     }
 
-    public void deleteById(String id) {
+    public void deleteById(Integer id) {
         mapper.deleteByPrimaryKey(id);
     }
 
@@ -46,7 +46,7 @@ public abstract class AbstractService<T> implements Service<T> {
         mapper.updateByPrimaryKeySelective(model);
     }
 
-    public T findById(String id) {
+    public T findById(Integer id) {
         return mapper.selectByPrimaryKey(id);
     }
 

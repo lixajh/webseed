@@ -8,7 +8,6 @@ import com.peake.webseed.feature.admin.mapper.AdminMapper;
 import com.peake.webseed.feature.admin.model.Admin;
 import com.peake.webseed.feature.admin.service.AdminService;
 import com.peake.webseed.utils.PasswordUtils;
-import com.peake.webseed.utils.PkUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -21,7 +20,7 @@ import javax.annotation.Resource;
 
 
 /**
- * Created by CodeGenerator on 2018/08/28.
+ * Created by CodeGenerator on 2018/08/29.
  */
 @Service
 @Transactional
@@ -51,8 +50,9 @@ public class AdminServiceImpl extends AbstractService<Admin> implements AdminSer
         admin.setPassword(PasswordUtils.generatePassword(PasswordUtils.DEFAULT_PASSWORD,admin.getSalt()));
         admin.setCreateTime(now());
         admin.setDataStatus(EnumDataStatus.normal.getValue());
-        admin.setPkGlobalId(PkUtils.getPk());
         save(admin);
+        long id = admin.getPkId();
+        System.out.println("___________id:" + id);
         return ResultGenerator.genSuccessResult();
     };
 }

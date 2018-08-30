@@ -72,6 +72,7 @@ public class MemberController {
 
     @GetMapping("/wechatLogin")
     @ResponseBody
+    //https://www.jianshu.com/p/7882ee243298
     public String wechatLogin(String code) throws WxErrorException {
         WxMpService wxMpService = WechatUtils.getInstance().getWxService();
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);

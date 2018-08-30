@@ -39,8 +39,8 @@ public class CodeGenerator {
 
     public static void main(String[] args) {
         genCode(null, "tbl_admin");
-//        genCode("news", "tbl_tv_show");
-//        genCode("news", "tbl_news");
+//        genCode("wechatmp", "tbl_tv_show");
+//        genCode("wechatmp", "tbl_news");
 //        genModelAndMapper("tbl_news",null);
         //genCodeByCustomModelName("输入表名","输入自定义Model名称");
     }

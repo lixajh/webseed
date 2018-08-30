@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.annotation.Resource;
 import java.util.List;
 
@@ -19,6 +20,9 @@ import java.util.List;
 @RestController
 @RequestMapping("${baseRequestMapping}")
 public class ${modelNameUpperCamel}Controller {
+
+    Logger logger = LoggerFactory.getLogger(${modelNameUpperCamel}Controller.class);
+
     @Resource
     private ${modelNameUpperCamel}Service ${modelNameLowerCamel}Service;
 
@@ -48,7 +52,7 @@ public class ${modelNameUpperCamel}Controller {
 
     @PostMapping("/list")
     public Result list(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, ${modelNameUpperCamel} ${modelNameLowerCamel}) {
-       PageInfo pageInfo = adminService.findbyPage(page,size,"username",${modelNameLowerCamel});
+       PageInfo pageInfo = ${modelNameLowerCamel}Service.findbyPage(page,size,"username",${modelNameLowerCamel});
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 }

@@ -95,7 +95,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/", "anon");
         filterChainDefinitionMap.put("/blog", "anon");
         filterChainDefinitionMap.put("/blog/open/**", "anon");
-        filterChainDefinitionMap.put("/mobile/wechat/**", "anon");
+        filterChainDefinitionMap.put("/mobile/member/**", "anon");
         filterChainDefinitionMap.put("/**", "authc");
 //        filterChainDefinitionMap.put("/**", "anon");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

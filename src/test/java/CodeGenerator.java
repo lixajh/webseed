@@ -56,6 +56,8 @@ public class CodeGenerator {
         for (String tableName : tableNames) {
             genCodeByCustomModelName(tableName, null, packageName);
         }
+    }public static void genNameCode(String packageName, String tableName,String modleName) {
+        genCodeByCustomModelName(tableName, modleName, packageName);
     }
 
     /**
@@ -81,11 +83,10 @@ public class CodeGenerator {
 
     public static void genModelAndMapper(String tableName, String modelName, String packageName) {
         if (StringUtils.isEmpty(modelName)) {
-            String tmpTableName = tableName.replace(TBL_PREFIX, "");
-            modelName = tableNameConvertLowerCamel(tmpTableName);
+            modelName = tableName.replace(TBL_PREFIX, "");
         }
         if (StringUtils.isEmpty(packageName)) {
-            packageName = modelName;
+            packageName = modelName.toLowerCase();
         }
 
 
@@ -167,12 +168,12 @@ public class CodeGenerator {
 
     public static void genService(String tableName, String modelName, String packageName) {
         if (StringUtils.isEmpty(modelName)) {
-            String tmpTableName = tableName.replace(TBL_PREFIX, "");
-            modelName = tableNameConvertLowerCamel(tmpTableName);
+            modelName = tableName.replace(TBL_PREFIX, "");
+
         }
 
         if (StringUtils.isEmpty(packageName)) {
-            packageName = modelName;
+            packageName = modelName.toLowerCase();
         }
         String servicePackage = FEATURE_PACKAGE + "." + packageName + ".service";
 
@@ -188,7 +189,7 @@ public class CodeGenerator {
             data.put("author", AUTHOR);
             String modelNameUpperCamel = tableNameConvertUpperCamel(modelName);
             data.put("modelNameUpperCamel", modelNameUpperCamel);
-            data.put("modelNameLowerCamel", tableNameConvertLowerCamel(modelName));
+            data.put("modelNameLowerCamel", tableNameConvertUpperCamel(modelName));
             data.put("modelPackage", packageName);
             data.put("basePackage", BASE_PACKAGE);
             data.put("featurePackage", FEATURE_PACKAGE);
@@ -220,11 +221,11 @@ public class CodeGenerator {
     public static void genController(String tableName, String modelName, String packageName) {
 
         if (StringUtils.isEmpty(modelName)) {
-            String tmpTableName = tableName.replace(TBL_PREFIX, "");
-            modelName = tableNameConvertLowerCamel(tmpTableName);
+            modelName = tableName.replace(TBL_PREFIX, "");
+
         }
         if (StringUtils.isEmpty(packageName)) {
-            packageName = modelName;
+            packageName = modelName.toLowerCase();
         }
         String controllerPackage = FEATURE_PACKAGE + "." + packageName + ".controller";
 
@@ -271,6 +272,7 @@ public class CodeGenerator {
     }
 
     private static String tableNameConvertUpperCamel(String tableName) {
+        String aaa = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName.toLowerCase());
         return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName.toLowerCase());
 
     }

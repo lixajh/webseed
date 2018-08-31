@@ -15,6 +15,8 @@ public class PasswordUtils {
 	//密码md5计算次数
 	public static final int PWD_HASH_ITERATIONS = 3;
 
+	public static final String DEFAULT_SALT = "defaultSalt";
+
 	private final static String[] hexDigits = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d",
 			"e", "f" };
 

@@ -4,6 +4,7 @@ package com.peake.webseed.common.configurer;
 
 import com.peake.webseed.common.shiro.BDSessionListener;
 import com.peake.webseed.feature.admin.realm.AdminRealm;
+import com.peake.webseed.feature.member.realm.ThirdPartyLoginRealm;
 import com.peake.webseed.shiro.RedisCacheManager;
 import com.peake.webseed.shiro.RedisManager;
 import com.peake.webseed.shiro.RedisSessionDAO;
@@ -137,6 +138,12 @@ public class ShiroConfig {
         adminRealm.setCredentialsMatcher(hashedCredentialsMatcher());
         return adminRealm;
     }
+    @Bean
+    public ThirdPartyLoginRealm thirdPartyLoginRealm(){
+        ThirdPartyLoginRealm realm = new ThirdPartyLoginRealm();
+        realm.setCredentialsMatcher(hashedCredentialsMatcher());
+        return realm;
+    }
 
     @Bean
     public SecurityManager securityManager() {
@@ -146,6 +153,7 @@ public class ShiroConfig {
         List<Realm> realms = new ArrayList<>();
         //添加多个Realm
         realms.add(adminRealm());
+        realms.add(thirdPartyLoginRealm());
 
         securityManager.setRealms(realms);
         // 自定义缓存实现 使用redis

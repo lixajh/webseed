@@ -4,6 +4,7 @@ package com.peake.webseed.feature.admin.realm;
 import com.peake.webseed.common.dto.UserDTO;
 import com.peake.webseed.common.enums.EnumDataStatus;
 import com.peake.webseed.common.enums.EnumUserType;
+import com.peake.webseed.common.shiro.ThirdPartyLoginToken;
 import com.peake.webseed.feature.admin.model.Admin;
 import com.peake.webseed.feature.admin.service.AdminService;
 import org.apache.shiro.authc.*;
@@ -37,6 +38,9 @@ public class AdminRealm extends AuthorizingRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        if (token instanceof ThirdPartyLoginToken){
+            throw new UnknownAccountException("不是后台账号");
+        }
         String username = (String) token.getPrincipal();
 
         String password = new String((char[]) token.getCredentials());

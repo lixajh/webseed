@@ -1,30 +1,37 @@
 package com.peake.webseed.feature.member.controller;
+
+import com.github.pagehelper.PageInfo;
+import com.peake.webseed.common.shiro.ThirdPartyLoginToken;
+import com.peake.webseed.core.AbstractController;
 import com.peake.webseed.core.Result;
 import com.peake.webseed.core.ResultGenerator;
 import com.peake.webseed.feature.member.model.Member;
 import com.peake.webseed.feature.member.service.MemberService;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.peake.webseed.utils.ShiroUtils;
 import com.peake.webseed.utils.WechatUtils;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
-import org.springframework.web.bind.annotation.*;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.*;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by CodeGenerator on 2018/08/30.
  */
 @RestController
 @RequestMapping("/mobile/member")
-public class MemberController {
+public class MemberController extends AbstractController {
 
     Logger logger = LoggerFactory.getLogger(MemberController.class);
 
@@ -50,8 +57,8 @@ public class MemberController {
     }
 
     @PostMapping("/detail")
-    public Result detail(@RequestParam Long id) {
-        Member member = memberService.findById(id);
+    public Result detail() {
+        Member member = memberService.findById(getMember().getPkId());
         return ResultGenerator.genSuccessResult(member);
     }
 
@@ -63,28 +70,57 @@ public class MemberController {
 
     @GetMapping("/toAuth")
     public String login(HttpServletResponse response) throws IOException {
-        WxMpService wxService = WechatUtils.getInstance().getWxService();
-        String url = "http://peake.mynatapp.cc/server/mobile/member/wechatLogin";
-        String s = wxService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, null);
-        response.sendRedirect(s);
+        if (ShiroUtils.getSubjct().isAuthenticated()){
+//            response.sendRedirect("http://peake.mynatapp.cc/mobilefront/#/index?result=0&isNew=false");
+            response.sendRedirect("http://peake.mynatapp.cc/mobilefront/#/index?result=0&isNew=true");//todo for test
+        }else{
+            WxMpService wxService = WechatUtils.getInstance().getWxService();
+            String url = "http://peake.mynatapp.cc/server/mobile/member/wechatLogin";
+            String s = wxService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, null);
+            response.sendRedirect(s);
+        }
+
         return null;
     }
 
     @GetMapping("/wechatLogin")
-    @ResponseBody
+//    @ResponseBody
     //https://www.jianshu.com/p/7882ee243298
-    public String wechatLogin(String code) throws WxErrorException {
+    public String wechatLogin(HttpServletResponse response, String code) throws WxErrorException, IOException {
         WxMpService wxMpService = WechatUtils.getInstance().getWxService();
         WxMpOAuth2AccessToken wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
         WxMpUser user = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
         Member member = memberService.findBy("openId", user.getOpenId());
-        if (member != null){
-            return "sss"+member.getNickname();
+        boolean isNew = false;
+        if (member == null){
+            member = new Member();
+            member.setNickname(user.getNickname());
+            member.setOpenId(user.getOpenId());
+            memberService.save(member);
+            isNew = true;
         }
-        member = new Member();
-        member.setNickname(user.getNickname());
-        member.setOpenId(user.getOpenId());
-        memberService.save(member);
-        return user.getCity() + user.getNickname();
+
+        String redirectUrl = "http://peake.mynatapp.cc/mobilefront/#/index?result=";
+        ThirdPartyLoginToken token = new ThirdPartyLoginToken(member.getOpenId(), 1);
+
+        Subject currentUser = SecurityUtils.getSubject();
+        try {
+            currentUser.login(token);
+            redirectUrl = redirectUrl + "0";
+        } catch (AuthenticationException e) {
+            redirectUrl = redirectUrl + "-1";
+        } catch (AuthorizationException e) {
+            redirectUrl = redirectUrl + "-1";
+        }
+//        redirectUrl = redirectUrl +"&isNew="+isNew;
+        redirectUrl = redirectUrl +"&isNew="+true;//todo for test
+        response.sendRedirect(redirectUrl);
+        return null;
+    }
+
+    @RequestMapping("/logout")
+    public Result logout() {
+        ShiroUtils.logout();
+        return ResultGenerator.genSuccessResult();
     }
 }

@@ -71,7 +71,7 @@ public class MemberController extends AbstractController {
 //            String s = wxService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, null);
 //            response.sendRedirect(s);
 //        }
-        response.sendRedirect("http://peake.mynatapp.cc/mobilefront/#/index?result=0&isNew=true");//todo for test
+        response.sendRedirect("http://peake.mynatapp.cc/mobilefront/#/index?result=0&isNew=1");//todo for test
         return null;
     }
 
@@ -94,7 +94,7 @@ public class MemberController extends AbstractController {
             redirectUrl = redirectUrl + "-1";
         }
 //        redirectUrl = redirectUrl +"&isNew="+isNew;
-        redirectUrl = redirectUrl +"&isNew="+true;//todo for test
+        redirectUrl = redirectUrl +"&isNew="+1;//todo for test
         response.sendRedirect(redirectUrl);
         return null;
     }

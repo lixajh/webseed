@@ -19,7 +19,7 @@ import java.util.List;
 */
 @RestController
 @RequestMapping("${baseRequestMapping}")
-public class ${modelNameUpperCamel}Controller {
+public class ${modelNameUpperCamel}Controller extends AbstractController  {
 
     Logger logger = LoggerFactory.getLogger(${modelNameUpperCamel}Controller.class);
 
@@ -45,8 +45,8 @@ public class ${modelNameUpperCamel}Controller {
     }
 
     @PostMapping("/detail")
-    public Result detail(@RequestParam Long id) {
-        ${modelNameUpperCamel} ${modelNameLowerCamel} = ${modelNameLowerCamel}Service.findById(id);
+    public Result detail() {
+        ${modelNameUpperCamel} ${modelNameLowerCamel} = ${modelNameLowerCamel}Service.findById(get${modelNameUpperCamel}().getPkId());
         return ResultGenerator.genSuccessResult(${modelNameLowerCamel});
     }
 

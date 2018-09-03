@@ -68,6 +68,6 @@ public class MemberServiceImpl extends AbstractService<Member> implements Member
         Member member = findByOpenId(openId);
         member.setLastLoginTime(now());
         member.setUpdateTime(now());
-
+        update(member);
     }
 }

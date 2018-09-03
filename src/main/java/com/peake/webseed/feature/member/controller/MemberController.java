@@ -8,7 +8,10 @@ import com.peake.webseed.feature.member.dto.MemberDTO;
 import com.peake.webseed.feature.member.model.Member;
 import com.peake.webseed.feature.member.service.MemberService;
 import com.peake.webseed.utils.ShiroUtils;
+import com.peake.webseed.utils.WechatUtils;
+import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.error.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
@@ -63,15 +66,17 @@ public class MemberController extends AbstractController {
 
     @GetMapping("/toAuth")
     public String toAuth(HttpServletResponse response) throws IOException {
-//        if (ShiroUtils.getSubjct().isAuthenticated()){
-//            response.sendRedirect("http://peake.mynatapp.cc/mobilefront/#/index?result=0&isNew=false");
-//        }else{
-//            WxMpService wxService = WechatUtils.getInstance().getWxService();
-//            String url = "http://peake.mynatapp.cc/server/mobile/member/wechatLogin";
-//            String s = wxService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, null);
-//            response.sendRedirect(s);
-//        }
-        response.sendRedirect("http://peake.mynatapp.cc/mobilefront/#/index?result=0&isNew=1");//todo for test
+        /*测试注销这一部分*/
+        if (ShiroUtils.getSubjct().isAuthenticated()){
+            response.sendRedirect("http://peake.mynatapp.cc/mobilefront/#/index?result=0&isNew=false");
+        }else{
+            WxMpService wxService = WechatUtils.getInstance().getWxService();
+            String url = "http://peake.mynatapp.cc/server/mobile/member/wechatLogin";
+            String s = wxService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, null);
+            response.sendRedirect(s);
+        }
+        /*测试注销这一部分 end*/
+//        response.sendRedirect("http://peake.mynatapp.cc/mobilefront/#/index?result=0&isNew=1");//todo for test
         return null;
     }
 
@@ -93,8 +98,10 @@ public class MemberController extends AbstractController {
         } catch (AuthorizationException e) {
             redirectUrl = redirectUrl + "-1";
         }
+        /*测试注销这一部分*/
 //        redirectUrl = redirectUrl +"&isNew="+isNew;
-        redirectUrl = redirectUrl +"&isNew="+1;//todo for test
+        /*测试注销这一部分 end*/
+//        redirectUrl = redirectUrl +"&isNew="+1;//todo for test
         response.sendRedirect(redirectUrl);
         return null;
     }

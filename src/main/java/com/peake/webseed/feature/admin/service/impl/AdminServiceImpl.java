@@ -66,4 +66,18 @@ public class AdminServiceImpl extends AbstractService<Admin> implements AdminSer
         save(admin);
         return ResultGenerator.genSuccessResult();
     };
+
+    @Override
+    public Result changePwd(String newPwd, String oldPwd) {
+        Admin admin = getAdmin();
+        if(PasswordUtils.generatePasswordWithOutMd5(oldPwd,admin.getSalt()).equals( admin.getPassword())){
+            //旧密码验证通过
+            admin.setPassword(PasswordUtils.generatePasswordWithOutMd5(newPwd,admin.getSalt()));
+            update(admin);
+            return ResultGenerator.genSuccessResult();
+        }else{
+            return  ResultGenerator.genFailResult("旧密码错误，请重试！");
+        }
+    }
+
 }

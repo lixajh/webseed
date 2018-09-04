@@ -12,4 +12,6 @@ public interface AdminService extends Service<Admin> {
     Result login(String username, String password);
 
     Result add(Admin admin);
+
+    Result changePwd(String newPwd, String oldPwd);
 }

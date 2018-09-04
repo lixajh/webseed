@@ -27,7 +27,7 @@ public class AdminController extends AbstractController {
 
 
     @PostMapping("/login")
-    public Result login(String username, String password) {
+    public Result login(@RequestParam String username, @RequestParam String password) {
         if (ShiroUtils.getSubjct().isAuthenticated()) {
             return ResultGenerator.genSuccessResult();
         }
@@ -67,15 +67,25 @@ public class AdminController extends AbstractController {
     }
 
     @PostMapping("/detail")
-    public Result detail() {
-        Admin admin = adminService.findById(getAdmin().getPkId());
+    public Result detail(Long id) {
+        if (id == null){
+            id = getAdmin().getPkId();
+        }
+        Admin admin = adminService.findById(id);
+        admin.setPassword(null);
+        admin.setSalt(null);
         return ResultGenerator.genSuccessResult(admin);
     }
 
     @PostMapping("/list")
     public Result list(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size,Admin admin) {
 
-        PageInfo pageInfo = adminService.findbyPage(page,size,"username",admin);
+        PageInfo pageInfo = adminService.findbyCustomPage(page,size,admin);
         return ResultGenerator.genSuccessResult(pageInfo);
+    }
+    @PostMapping("/changePwd")
+    public Result changePwd(@RequestParam String newPwd, @RequestParam String oldPwd) {
+
+        return adminService.changePwd(newPwd, oldPwd);
     }
 }

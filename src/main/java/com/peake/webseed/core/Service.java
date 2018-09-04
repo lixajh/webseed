@@ -22,6 +22,6 @@ public interface Service<T> {
     List<T> findAll();//获取所有
     List<T> findByExample(Object o);
     PageInfo findbyPage(Integer page, Integer size, String orderby, T o);
-
+    PageInfo findbyCustomPage(Integer page, Integer size, T o);
 
 }

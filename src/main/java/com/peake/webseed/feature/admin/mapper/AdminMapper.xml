@@ -16,4 +16,22 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
+
+  <select id="findByCustomCondition" resultMap="BaseResultMap">
+    select a.pk_id, a.username, a.data_status, a.phone, a.nick_name,a.last_login_time, a.update_time,a.create_time
+    from tbl_admin a
+
+    where a.data_status != -1
+    <if test="obj.username != null and obj.username != ''">
+      and a.username like  concat('%' ,#{obj.username}, '%')
+    </if>
+
+    <if test="obj.dataStatus != null">
+      and a.data_status = #{obj.dataStatus}
+    </if>
+    <if test="obj.phone != null and obj.phone != ''">
+      and a.phone like concat('%' ,#{obj.phone}, '%')
+    </if>
+    order by a.create_time DESC
+  </select>
 </mapper>

@@ -107,4 +107,12 @@ public abstract class AbstractService<T> implements Service<T> {
         return cacheService.getAdminInfo();
     }
 
+    public PageInfo findbyCustomPage(Integer page, Integer size,T o){
+
+        PageHelper.startPage(page, size);
+        List<T> list = mapper.findByCustomCondition(o);
+        PageInfo pageInfo = new PageInfo(list);
+        return pageInfo;
+    }
+
 }

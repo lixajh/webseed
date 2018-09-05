@@ -45,8 +45,8 @@ public class ${modelNameUpperCamel}Controller extends AbstractController  {
     }
 
     @PostMapping("/detail")
-    public Result detail() {
-        ${modelNameUpperCamel} ${modelNameLowerCamel} = ${modelNameLowerCamel}Service.findById(get${modelNameUpperCamel}().getPkId());
+    public Result detail(@RequestParam Long id) {
+        ${modelNameUpperCamel} ${modelNameLowerCamel} = ${modelNameLowerCamel}Service.findById(id);
         return ResultGenerator.genSuccessResult(${modelNameLowerCamel});
     }
 

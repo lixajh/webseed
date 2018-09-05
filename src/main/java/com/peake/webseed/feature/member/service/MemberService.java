@@ -2,8 +2,9 @@ package com.peake.webseed.feature.member.service;
 
 import com.peake.webseed.core.Result;
 import com.peake.webseed.core.Service;
-import com.peake.webseed.feature.member.dto.MemberDTO;
+import com.peake.webseed.feature.member.dto.WechatLoginDTO;
 import com.peake.webseed.feature.member.model.Member;
+import com.peake.webseed.feature.member.model.MemberDetailDTO;
 import me.chanjar.weixin.common.error.WxErrorException;
 
 
@@ -13,8 +14,11 @@ import me.chanjar.weixin.common.error.WxErrorException;
 public interface MemberService extends Service<Member> {
     Result login(Member member);
 
-    MemberDTO getMemberByWechatCode(String code) throws WxErrorException;
+    WechatLoginDTO getMemberByWechatCode(String code) throws WxErrorException;
 
     void loginByOpenId(String openId);
+
     Member findByOpenId(String openId);
+
+    MemberDetailDTO detail(Long id);
 }

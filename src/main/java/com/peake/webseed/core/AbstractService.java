@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.peake.webseed.common.redis.CacheService;
 import com.peake.webseed.feature.admin.model.Admin;
+import com.peake.webseed.feature.member.service.MemberPlusService;
 import com.peake.webseed.utils.DateUtils;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public abstract class AbstractService<T> implements Service<T> {
 
     @Autowired
     CacheService cacheService;
+    @Autowired
+    MemberPlusService memberPlusService;
 
 
     public AbstractService() {

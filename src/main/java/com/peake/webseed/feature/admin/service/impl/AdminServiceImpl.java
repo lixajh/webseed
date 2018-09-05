@@ -68,6 +68,17 @@ public class AdminServiceImpl extends AbstractService<Admin> implements AdminSer
     };
 
     @Override
+    public Result edit(Admin admin) {
+        Admin oldAdmin = findBy("username", admin.getUsername());
+        if(oldAdmin != null && oldAdmin.getPkId() != admin.getPkId() && oldAdmin.getDataStatus() != EnumDataStatus.del.getValue()){
+            return ResultGenerator.genFailResult("该用户名已被注册");
+        }
+        admin.setUpdateTime(now());
+        update(admin);
+        return ResultGenerator.genSuccessResult();
+    };
+
+    @Override
     public Result changePwd(String newPwd, String oldPwd) {
         Admin admin = getAdmin();
         if(PasswordUtils.generatePasswordWithOutMd5(oldPwd,admin.getSalt()).equals( admin.getPassword())){

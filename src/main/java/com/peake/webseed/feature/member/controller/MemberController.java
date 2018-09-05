@@ -4,8 +4,9 @@ import com.github.pagehelper.PageInfo;
 import com.peake.webseed.core.AbstractController;
 import com.peake.webseed.core.Result;
 import com.peake.webseed.core.ResultGenerator;
-import com.peake.webseed.feature.member.dto.MemberDTO;
+import com.peake.webseed.feature.member.dto.WechatLoginDTO;
 import com.peake.webseed.feature.member.model.Member;
+import com.peake.webseed.feature.member.model.MemberDetailDTO;
 import com.peake.webseed.feature.member.service.MemberService;
 import com.peake.webseed.utils.ShiroUtils;
 import com.peake.webseed.utils.WechatUtils;
@@ -54,7 +55,7 @@ public class MemberController extends AbstractController {
 
     @PostMapping("/detail")
     public Result detail() {
-        Member member = memberService.findById(getMember().getPkId());
+        MemberDetailDTO member = memberService.detail(getMember().getPkId());
         return ResultGenerator.genSuccessResult(member);
     }
 
@@ -85,7 +86,7 @@ public class MemberController extends AbstractController {
     //https://www.jianshu.com/p/7882ee243298
     public String wechatLogin(HttpServletResponse response, String code) throws WxErrorException, IOException {
 
-        MemberDTO memberDTO = memberService.getMemberByWechatCode(code);
+        WechatLoginDTO memberDTO = memberService.getMemberByWechatCode(code);
         Member member = memberDTO.getMember();
         boolean isNew = memberDTO.isNew();
         String redirectUrl = "http://peake.mynatapp.cc/mobilefront/#/index?result=";
@@ -99,7 +100,7 @@ public class MemberController extends AbstractController {
             redirectUrl = redirectUrl + "-1";
         }
         /*测试注销这一部分*/
-//        redirectUrl = redirectUrl +"&isNew="+isNew;
+        redirectUrl = redirectUrl +"&isNew="+isNew;
         /*测试注销这一部分 end*/
 //        redirectUrl = redirectUrl +"&isNew="+1;//todo for test
         response.sendRedirect(redirectUrl);

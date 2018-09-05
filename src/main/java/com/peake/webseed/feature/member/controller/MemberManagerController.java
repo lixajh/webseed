@@ -4,20 +4,17 @@ import com.github.pagehelper.PageInfo;
 import com.peake.webseed.core.AbstractController;
 import com.peake.webseed.core.Result;
 import com.peake.webseed.core.ResultGenerator;
-import com.peake.webseed.feature.member.dto.MemberDTO;
 import com.peake.webseed.feature.member.model.Member;
+import com.peake.webseed.feature.member.model.MemberDetailDTO;
 import com.peake.webseed.feature.member.service.MemberService;
-import com.peake.webseed.utils.ShiroUtils;
-import me.chanjar.weixin.common.error.WxErrorException;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Created by CodeGenerator on 2018/08/30.
@@ -38,8 +35,8 @@ public class MemberManagerController extends AbstractController {
     }
 
     @PostMapping("/detail")
-    public Result detail() {
-        Member member = memberService.findById(getMember().getPkId());
+    public Result detail(@RequestParam Long id) {
+        MemberDetailDTO member = memberService.detail(id);
         return ResultGenerator.genSuccessResult(member);
     }
 

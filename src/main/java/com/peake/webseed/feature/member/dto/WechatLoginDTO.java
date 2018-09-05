@@ -2,11 +2,11 @@ package com.peake.webseed.feature.member.dto;
 
 import com.peake.webseed.feature.member.model.Member;
 
-public class MemberDTO {
+public class WechatLoginDTO {
     Member member;
     boolean isNew;
 
-    public MemberDTO(Member member, boolean isNew) {
+    public WechatLoginDTO(Member member, boolean isNew) {
         this.member = member;
         this.isNew = isNew;
     }

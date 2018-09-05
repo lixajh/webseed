@@ -7,6 +7,7 @@ import com.peake.webseed.core.Result;
 import com.peake.webseed.core.ResultGenerator;
 import com.peake.webseed.feature.admin.model.Admin;
 import com.peake.webseed.feature.admin.service.AdminService;
+import com.peake.webseed.utils.PasswordUtils;
 import com.peake.webseed.utils.ShiroUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * Created by CodeGenerator on 2018/08/29.
@@ -48,6 +50,15 @@ public class AdminController extends AbstractController {
         }
     }
 
+    @PostMapping("/edit")
+    public Result edit(Admin admin) {
+        if (admin.getPkId() != null && StringUtils.isNoneBlank(admin.getUsername())) {
+            return adminService.edit(admin);
+        } else {
+            return ResultGenerator.genFailResult(EnumErrorCode.PARAM_ERROR);
+        }
+    }
+
     @PostMapping("/logout")
     public Result logout() {
         ShiroUtils.logout();
@@ -62,8 +73,10 @@ public class AdminController extends AbstractController {
 
     @PostMapping("/update")
     public Result update(Admin admin) {
-        adminService.update(admin);
-        return ResultGenerator.genSuccessResult();
+        if (admin.getPkId() == null){
+            return ResultGenerator.genFailResult(EnumErrorCode.PARAM_ERROR);
+        }
+        return adminService.edit(admin);
     }
 
     @PostMapping("/detail")
@@ -83,9 +96,19 @@ public class AdminController extends AbstractController {
         PageInfo pageInfo = adminService.findbyCustomPage(page,size,admin);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+
     @PostMapping("/changePwd")
     public Result changePwd(@RequestParam String newPwd, @RequestParam String oldPwd) {
 
         return adminService.changePwd(newPwd, oldPwd);
+    }
+
+    @PostMapping("/resetPwd")
+    public Result resetPwd(@RequestParam Long id) {
+        Admin admin = adminService.findById(id);
+        admin.setPassword(PasswordUtils.generatePassword(PasswordUtils.DEFAULT_PASSWORD,admin.getSalt()));
+        admin.setUpdateTime(new Date());
+        adminService.update(admin);
+        return ResultGenerator.genSuccessResult();
     }
 }

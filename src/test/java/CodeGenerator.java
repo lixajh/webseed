@@ -38,8 +38,9 @@ public class CodeGenerator {
     private static final String DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());//@date
 
     public static void main(String[] args) {
-        genCode("member", "tbl_member");
-        genCode("member", "tbl_member_plus");
+//        genCode("member", "tbl_member");
+        genCode("device", "tbl_device");
+//        genCode("member", "tbl_member_plus");
 //        genCode("wechatmp", "tbl_tv_show");
 //        genCode("wechatmp", "tbl_news");
 //        genModelAndMapper("tbl_news",null);
@@ -120,7 +121,7 @@ public class CodeGenerator {
 
         SqlMapGeneratorConfiguration sqlMapGeneratorConfiguration = new SqlMapGeneratorConfiguration();
         sqlMapGeneratorConfiguration.setTargetProject(PROJECT_PATH + JAVA_PATH);
-        sqlMapGeneratorConfiguration.setTargetPackage(modelPackage);
+        sqlMapGeneratorConfiguration.setTargetPackage(mapperPackage);
         context.setSqlMapGeneratorConfiguration(sqlMapGeneratorConfiguration);
 
         JavaClientGeneratorConfiguration javaClientGeneratorConfiguration = new JavaClientGeneratorConfiguration();

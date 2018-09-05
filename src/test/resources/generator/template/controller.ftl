@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.annotation.Resource;
 import java.util.List;
+import com.peake.webseed.core.AbstractController;
 
 /**
 * Created by ${author} on ${date}.

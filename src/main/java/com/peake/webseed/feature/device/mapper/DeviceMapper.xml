@@ -37,4 +37,12 @@
     order by a.create_time DESC
   </select>
 
+  <update id="batchDelete" >
+      update tbl_device set data_status ="-1"
+      where pk_id in
+    <foreach collection="array" item="item" index="index" open="(" close=")" separator=",">
+      #{item,jdbcType=VARCHAR}
+    </foreach>
+  </update>
+
 </mapper>

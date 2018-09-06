@@ -1,5 +1,7 @@
 package com.peake.webseed.feature.device.service.impl;
 
+import com.peake.webseed.core.Result;
+import com.peake.webseed.core.ResultGenerator;
 import com.peake.webseed.feature.device.mapper.DeviceMapper;
 import com.peake.webseed.feature.device.model.Device;
 import com.peake.webseed.feature.device.service.DeviceService;
@@ -23,4 +25,18 @@ public class DeviceServiceImpl extends AbstractService<Device> implements Device
     @Resource
     private DeviceMapper DeviceMapper;
 
+    @Override
+    public Result add(Device device) {
+//        if (device.getCode())
+        device.setCreateTime(now());
+        device.setUpdateTime(now());
+        save(device);
+        return ResultGenerator.genSuccessResult();
+    }
+
+    @Override
+    public Result deleteByIds(Long[] ids) {
+        DeviceMapper.batchDelete(ids);
+        return ResultGenerator.genSuccessResult();
+    }
 }

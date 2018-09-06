@@ -28,14 +28,13 @@ public class DeviceController extends AbstractController  {
 
     @PostMapping("/add")
     public Result add(Device device) {
-        deviceService.save(device);
-        return ResultGenerator.genSuccessResult();
+        return deviceService.add(device);
     }
 
     @PostMapping("/delete")
-    public Result delete(@RequestParam Long id) {
-        deviceService.deleteById(id);
-        return ResultGenerator.genSuccessResult();
+    public Result delete(@RequestParam Long[] ids) {
+        return  deviceService.deleteByIds(ids);
+
     }
 
     @PostMapping("/update")

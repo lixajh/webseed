@@ -69,7 +69,7 @@ public class MemberController extends AbstractController {
     public String toAuth(HttpServletResponse response) throws IOException {
         /*测试注销这一部分*/
         if (ShiroUtils.getSubjct().isAuthenticated()){
-            response.sendRedirect("http://peake.mynatapp.cc/mobilefront/#/index?result=0&isNew=false");
+            response.sendRedirect("http://peake.mynatapp.cc/mobilefront/#/index?result=0&isNew=0");
         }else{
             WxMpService wxService = WechatUtils.getInstance().getWxService();
             String url = "http://peake.mynatapp.cc/server/mobile/member/wechatLogin";
@@ -99,10 +99,7 @@ public class MemberController extends AbstractController {
         } catch (AuthorizationException e) {
             redirectUrl = redirectUrl + "-1";
         }
-        /*测试注销这一部分*/
-        redirectUrl = redirectUrl +"&isNew="+isNew;
-        /*测试注销这一部分 end*/
-//        redirectUrl = redirectUrl +"&isNew="+1;//todo for test
+        redirectUrl = redirectUrl +"&isNew="+(isNew?1:0);
         response.sendRedirect(redirectUrl);
         return null;
     }

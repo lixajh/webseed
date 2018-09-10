@@ -66,10 +66,15 @@ public class MemberController extends AbstractController {
     }
 
     @GetMapping("/toAuth")
-    public String toAuth(HttpServletResponse response) throws IOException {
+    public String toAuth(HttpServletResponse response,Integer isNew) throws IOException {
         /*测试注销这一部分*/
         if (ShiroUtils.getSubjct().isAuthenticated()){
-            response.sendRedirect("http://peake.mynatapp.cc/mobilefront/#/index?result=0&isNew=0");
+            if(isNew != null){
+                response.sendRedirect("http://peake.mynatapp.cc/mobilefront/#/index?result=0&isNew="+isNew);
+            }else{
+                response.sendRedirect("http://peake.mynatapp.cc/mobilefront/#/index?result=0&isNew=0");
+            }
+
         }else{
             WxMpService wxService = WechatUtils.getInstance().getWxService();
             String url = "http://peake.mynatapp.cc/server/mobile/member/wechatLogin";

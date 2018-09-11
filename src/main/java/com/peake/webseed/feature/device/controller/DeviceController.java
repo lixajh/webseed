@@ -34,7 +34,6 @@ public class DeviceController extends AbstractController  {
     @PostMapping("/delete")
     public Result delete(@RequestParam Long[] ids) {
         return  deviceService.deleteByIds(ids);
-
     }
 
     @PostMapping("/update")

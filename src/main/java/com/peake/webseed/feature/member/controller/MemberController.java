@@ -17,6 +17,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -32,6 +33,8 @@ public class MemberController extends AbstractController {
 
     Logger logger = LoggerFactory.getLogger(MemberController.class);
 
+    @Value("${domain}")
+    private String domain;
     @Resource
     private MemberService memberService;
 
@@ -70,14 +73,14 @@ public class MemberController extends AbstractController {
         /*测试注销这一部分*/
         if (ShiroUtils.getSubjct().isAuthenticated()){
             if(isNew != null){
-                response.sendRedirect("http://peake.mynatapp.cc/mobilefront/#/index?result=0&isNew="+isNew);
+                response.sendRedirect(domain + "mobilefront/#/index?result=0&isNew="+isNew);
             }else{
-                response.sendRedirect("http://peake.mynatapp.cc/mobilefront/#/index?result=0&isNew=0");
+                response.sendRedirect(domain + "mobilefront/#/index?result=0&isNew=0");
             }
 
         }else{
             WxMpService wxService = WechatUtils.getInstance().getWxService();
-            String url = "http://peake.mynatapp.cc/server/mobile/member/wechatLogin";
+            String url = domain + "server/mobile/member/wechatLogin";
             String s = wxService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, null);
             response.sendRedirect(s);
         }
@@ -94,7 +97,7 @@ public class MemberController extends AbstractController {
         WechatLoginDTO memberDTO = memberService.getMemberByWechatCode(code);
         Member member = memberDTO.getMember();
         boolean isNew = memberDTO.isNew();
-        String redirectUrl = "http://peake.mynatapp.cc/mobilefront/#/index?result=";
+        String redirectUrl = domain + "mobilefront/#/index?result=";
 
         try {
             memberService.loginByOpenId(member.getOpenId());

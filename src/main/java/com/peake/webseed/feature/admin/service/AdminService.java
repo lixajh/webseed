@@ -16,4 +16,6 @@ public interface AdminService extends Service<Admin> {
     Result edit(Admin admin);
 
     Result changePwd(String newPwd, String oldPwd);
+
+    Result deleteByIds(Long[] ids);
 }

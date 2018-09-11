@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AdminMapper extends Mapper<Admin> {
 
-//    List<Admin> findByCustomCondition(@Param("obj") Admin o);
+    void batchDelete(Long ids[]);
 }

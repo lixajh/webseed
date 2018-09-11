@@ -62,6 +62,7 @@ public class AdminServiceImpl extends AbstractService<Admin> implements AdminSer
         admin.setSalt(PasswordUtils.getRanSalt());
         admin.setPassword(PasswordUtils.generatePassword(PasswordUtils.DEFAULT_PASSWORD,admin.getSalt()));
         admin.setCreateTime(now());
+        admin.setUpdateTime(now());
         admin.setDataStatus(EnumDataStatus.normal.getValue());
         save(admin);
         return ResultGenerator.genSuccessResult();
@@ -89,6 +90,12 @@ public class AdminServiceImpl extends AbstractService<Admin> implements AdminSer
         }else{
             return  ResultGenerator.genFailResult("旧密码错误，请重试！");
         }
+    }
+
+        @Override
+    public Result deleteByIds(Long[] ids) {
+        adminMapper.batchDelete(ids);
+        return ResultGenerator.genSuccessResult();
     }
 
 }

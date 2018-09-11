@@ -66,8 +66,8 @@ public class AdminController extends AbstractController {
     }
 
     @PostMapping("/delete")
-    public Result delete(@RequestParam Long id) {
-        adminService.deleteById(id);
+    public Result delete(@RequestParam Long[] ids) {
+        adminService.deleteByIds(ids);
         return ResultGenerator.genSuccessResult();
     }
 

@@ -48,3 +48,5 @@ mybatis:
 #  mappers:
 #    - tk.mybatis.mapper.common.Mapper
 #  notEmpty: true
+
+domain: http://peake.mynatapp.cc/

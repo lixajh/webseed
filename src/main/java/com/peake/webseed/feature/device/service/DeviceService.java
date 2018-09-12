@@ -8,7 +8,6 @@ import com.peake.webseed.core.Service;
  * Created by CodeGenerator on 2018/09/05.
  */
 public interface DeviceService extends Service<Device> {
-    Result add(Device device);
 
     Result deleteByIds(Long[] ids);
 }

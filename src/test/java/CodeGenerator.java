@@ -39,7 +39,8 @@ public class CodeGenerator {
 
     public static void main(String[] args) {
 //        genCode("member", "tbl_member");
-        genCode("device", "tbl_device");
+//        genCode("device", "tbl_device");
+        genCode("product", "tbl_product");
 //        genCode("member", "tbl_member_plus");
 //        genCode("wechatmp", "tbl_tv_show");
 //        genCode("wechatmp", "tbl_news");

@@ -23,7 +23,7 @@ public class DeviceServiceImpl extends AbstractService<Device> implements Device
     Logger logger = LoggerFactory.getLogger(DeviceServiceImpl.class);
 
     @Resource
-    private DeviceMapper DeviceMapper;
+    private DeviceMapper deviceMapper;
 
     @Override
     public Result add(Device device) {
@@ -36,7 +36,7 @@ public class DeviceServiceImpl extends AbstractService<Device> implements Device
 
     @Override
     public Result deleteByIds(Long[] ids) {
-        DeviceMapper.batchDelete(ids);
+        deviceMapper.batchDelete(ids);
         return ResultGenerator.genSuccessResult();
     }
 }

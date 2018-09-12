@@ -68,9 +68,7 @@ public class MemberDetailDTO {
             try {
                 this.address = "" + memberPlus.getCountry() + " " + getProvince() + " " + getCity();
             }catch (Exception e){
-
             }
-
         }
     }
 

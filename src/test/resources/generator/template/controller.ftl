@@ -53,7 +53,7 @@ public class ${modelNameUpperCamel}Controller extends AbstractController  {
 
     @PostMapping("/list")
     public Result list(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, ${modelNameUpperCamel} ${modelNameLowerCamel}) {
-       PageInfo pageInfo = ${modelNameLowerCamel}Service.findbyPage(page,size,"username",${modelNameLowerCamel});
+       PageInfo pageInfo = ${modelNameLowerCamel}Service.findbyPage(page,size,"createTime",${modelNameLowerCamel});
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 }

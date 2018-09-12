@@ -6,7 +6,7 @@ public class VerifyUtils {
 	
 	public static boolean verifyAllParamsNotNull(Object...objects){
 		for (Object object : objects) {
-			if(StringUtils.isEmpty(object)){
+			if(StringUtils.isEmpty(object) || object.toString().equals("null")){
 				return false;
 			}
 		}

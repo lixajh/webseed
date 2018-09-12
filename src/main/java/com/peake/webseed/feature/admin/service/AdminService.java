@@ -11,7 +11,7 @@ import com.peake.webseed.feature.admin.model.Admin;
 public interface AdminService extends Service<Admin> {
     Result login(String username, String password);
 
-    Result add(Admin admin);
+
 
     Result edit(Admin admin);
 

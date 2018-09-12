@@ -118,4 +118,8 @@ public abstract class AbstractService<T> implements Service<T> {
         return pageInfo;
     }
 
+    public Result add(T model){
+        return null;
+    }
+
 }

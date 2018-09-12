@@ -23,5 +23,5 @@ public interface Service<T> {
     List<T> findByExample(Object o);
     PageInfo findbyPage(Integer page, Integer size, String orderby, T o);
     PageInfo findbyCustomPage(Integer page, Integer size, T o);
-
+    Result add(T model);
 }

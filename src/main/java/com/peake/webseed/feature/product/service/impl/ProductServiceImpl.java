@@ -1,0 +1,47 @@
+package com.peake.webseed.feature.product.service.impl;
+
+import com.peake.webseed.common.enums.EnumDataStatus;
+import com.peake.webseed.core.AbstractService;
+import com.peake.webseed.core.Result;
+import com.peake.webseed.core.ResultGenerator;
+import com.peake.webseed.feature.product.mapper.ProductMapper;
+import com.peake.webseed.feature.product.model.Product;
+import com.peake.webseed.feature.product.service.ProductService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+
+
+/**
+ * Created by CodeGenerator on 2018/09/12.
+ */
+@Service
+@Transactional
+public class ProductServiceImpl extends AbstractService<Product> implements ProductService {
+
+    Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
+
+    @Resource
+    private ProductMapper productMapper;
+
+
+    @Override
+    public Result add(Product product) {
+//        if (device.getCode())
+        product.setCreateTime(now());
+        product.setUpdateTime(now());
+        product.setDataStatus(EnumDataStatus.normal.getValue());
+        save(product);
+        return ResultGenerator.genSuccessResult();
+    }
+
+    @Override
+    public Result deleteByIds(Long[] ids) {
+        productMapper.batchDelete(ids);
+        return ResultGenerator.genSuccessResult();
+    }
+
+}

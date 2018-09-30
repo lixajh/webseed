@@ -40,7 +40,7 @@ public class CodeGenerator {
     public static void main(String[] args) {
 //        genCode("member", "tbl_member");
 //        genCode("device", "tbl_device");
-        genCode("product", "tbl_product");
+        genCode("merchant", "tbl_merchant");
 //        genCode("member", "tbl_member_plus");
 //        genCode("wechatmp", "tbl_tv_show");
 //        genCode("wechatmp", "tbl_news");
@@ -58,7 +58,9 @@ public class CodeGenerator {
         for (String tableName : tableNames) {
             genCodeByCustomModelName(tableName, null, packageName);
         }
-    }public static void genNameCode(String packageName, String tableName,String modleName) {
+    }
+
+    public static void genNameCode(String packageName, String tableName,String modleName) {
         genCodeByCustomModelName(tableName, modleName, packageName);
     }
 

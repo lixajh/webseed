@@ -5,6 +5,7 @@ import com.peake.webseed.core.Result;
 import com.peake.webseed.core.ResultGenerator;
 import com.peake.webseed.feature.device.model.Device;
 import com.peake.webseed.feature.device.service.DeviceService;
+import com.peake.webseed.feature.merchant.service.MerchantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +26,8 @@ public class DeviceController extends AbstractController  {
 
     @Resource
     private DeviceService deviceService;
+    @Resource
+    private MerchantService merchantService;
 
     @PostMapping("/add")
     public Result add(Device device) {
@@ -52,5 +55,10 @@ public class DeviceController extends AbstractController  {
     public Result list(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, Device device) {
        PageInfo pageInfo = deviceService.findbyCustomPage(page,size,device);
         return ResultGenerator.genSuccessResult(pageInfo);
+    }
+    @PostMapping("/deviceMerchantList")
+    public Result deviceMerchantList() {
+        return merchantService.getAllMerchants();
+
     }
 }

@@ -1,5 +1,6 @@
 package com.peake.webseed.feature.member.controller;
 
+import com.alipay.api.AlipayApiException;
 import com.github.pagehelper.PageInfo;
 import com.peake.webseed.core.AbstractController;
 import com.peake.webseed.core.Result;
@@ -9,6 +10,7 @@ import com.peake.webseed.feature.member.model.Member;
 import com.peake.webseed.feature.member.model.MemberDetailDTO;
 import com.peake.webseed.feature.member.service.MemberService;
 import com.peake.webseed.utils.ShiroUtils;
+import com.peake.webseed.utils.StringUtils;
 import com.peake.webseed.utils.WechatUtils;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -21,8 +23,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 /**
  * Created by CodeGenerator on 2018/08/30.
@@ -35,6 +39,10 @@ public class MemberController extends AbstractController {
 
     @Value("${domain}")
     private String domain;
+    @Value("${alipay.appid}")
+    private String alipayAppid;
+    @Value("${alipay.sandbox}")
+    private boolean alipaySandbox;
     @Resource
     private MemberService memberService;
 
@@ -69,8 +77,11 @@ public class MemberController extends AbstractController {
     }
 
     @GetMapping("/toAuth")
-    public String toAuth(HttpServletResponse response,Integer isNew) throws IOException {
-        /*测试注销这一部分*/
+    public String toAuth(HttpServletRequest request, HttpServletResponse response,Integer isNew) throws IOException {
+        String ua = ((HttpServletRequest) request).getHeader("user-agent").toLowerCase();
+
+
+
         if (ShiroUtils.getSubjct().isAuthenticated()){
             if(isNew != null){
                 response.sendRedirect(domain + "mobilefront/#/index?result=0&isNew="+isNew);
@@ -79,10 +90,33 @@ public class MemberController extends AbstractController {
             }
 
         }else{
-            WxMpService wxService = WechatUtils.getInstance().getWxService();
-            String url = domain + "server/mobile/member/wechatLogin";
-            String s = wxService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, null);
-            response.sendRedirect(s);
+            if(ua.indexOf("alipay") > 0){
+                //支付宝
+                String auth_code = request.getParameter("auth_code");
+
+//                logger.info("alipay auth_code is null ,redirect open in alipay");
+                String url = domain + "server/mobile/member/wechatLogin";;
+                String redirectUrl;
+                if (alipaySandbox){
+                    redirectUrl = "https://openauth.alipaydev.com/oauth2/publicAppAuthorize.htm?app_id="+alipayAppid+"&scope=auth_user&redirect_uri="+URLEncoder.encode(url,"UTF-8");
+
+                }else{
+                    redirectUrl = "https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id="+alipayAppid+"&scope=auth_user&redirect_uri="+URLEncoder.encode(url,"UTF-8");
+
+                }
+//                logger.info("redirect【" + redirectUrl + "】");
+
+                response.sendRedirect(redirectUrl);
+            }else if (ua.indexOf("micromessenger") > 0) {
+                //微信
+                WxMpService wxService = WechatUtils.getInstance().getWxService();
+                String url = domain + "server/mobile/member/wechatLogin";
+                String s = wxService.oauth2buildAuthorizationUrl(url, WxConsts.OAuth2Scope.SNSAPI_USERINFO, null);
+                response.sendRedirect(s);
+            }else{
+                //todo 提示请使用微信或支付宝扫描二维码
+            }
+
         }
         /*测试注销这一部分 end*/
 //        response.sendRedirect("http://peake.mynatapp.cc/mobilefront/#/index?result=0&isNew=1");//todo for test
@@ -92,9 +126,17 @@ public class MemberController extends AbstractController {
     @GetMapping("/wechatLogin")
 //    @ResponseBody
     //https://www.jianshu.com/p/7882ee243298
-    public String wechatLogin(HttpServletResponse response, String code) throws WxErrorException, IOException {
-
-        WechatLoginDTO memberDTO = memberService.getMemberByWechatCode(code);
+    public String wechatLogin(HttpServletResponse response, String code,String auth_code) throws WxErrorException, IOException, AlipayApiException {
+        WechatLoginDTO memberDTO = null;
+        if (StringUtils.isNotBlank(code)){
+            memberDTO = memberService.getMemberByWechatCode(code);
+        }else if(StringUtils.isNotBlank(auth_code)) {
+            memberDTO = memberService.getMemberByAlipayCode(auth_code);
+        }
+        if (memberDTO == null){
+            //todo 提示错误
+            return null;
+        }
         Member member = memberDTO.getMember();
         boolean isNew = memberDTO.isNew();
         String redirectUrl = domain + "mobilefront/#/index?result=";

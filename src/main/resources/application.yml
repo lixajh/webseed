@@ -50,3 +50,9 @@ mybatis:
 #  notEmpty: true
 
 domain: http://peake.mynatapp.cc/
+#pay config
+alipay:
+  sandbox: false
+  appid: 22222
+  private_key: 33333
+  public_key: 44444

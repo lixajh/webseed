@@ -23,8 +23,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLEncoder;
 
@@ -34,6 +36,7 @@ import java.net.URLEncoder;
 @RestController
 @RequestMapping("/mobile/member")
 public class MemberController extends AbstractController {
+    public static final String deviceIdKey = "deviceId";
     String host = "peake.mynatapp.cc";
     Logger logger = LoggerFactory.getLogger(MemberController.class);
 
@@ -76,17 +79,29 @@ public class MemberController extends AbstractController {
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
+    /**
+     *
+     * @param session
+     * @param request
+     * @param response
+     * @param isNew 测试用，想看第一次登陆的效果使用isNew = 1
+     * @param deviceId
+     * @return
+     * @throws IOException
+     */
     @GetMapping("/toAuth")
-    public String toAuth(HttpServletRequest request, HttpServletResponse response,Integer isNew) throws IOException {
+    public String toAuth(HttpSession session, HttpServletRequest request, HttpServletResponse response, Integer isNew, String deviceId) throws IOException {
+        if (StringUtils.isEmpty(deviceId)){
+            session.removeAttribute(deviceIdKey);
+        }else{
+            session.setAttribute(deviceIdKey, deviceId);
+        }
         String ua = ((HttpServletRequest) request).getHeader("user-agent").toLowerCase();
-
-
-
         if (ShiroUtils.getSubjct().isAuthenticated()){
             if(isNew != null){
-                response.sendRedirect(domain + "mobilefront/#/index?result=0&isNew="+isNew);
+                response.sendRedirect(domain + "mobilefront/#/index?result=0&isNew="+isNew + "&deviceId="+deviceId);
             }else{
-                response.sendRedirect(domain + "mobilefront/#/index?result=0&isNew=0");
+                response.sendRedirect(domain + "mobilefront/#/index?result=0&isNew=0"+ "&deviceId="+deviceId);
             }
 
         }else{
@@ -95,7 +110,7 @@ public class MemberController extends AbstractController {
                 String auth_code = request.getParameter("auth_code");
 
 //                logger.info("alipay auth_code is null ,redirect open in alipay");
-                String url = domain + "server/mobile/member/wechatLogin";;
+                String url = domain + "server/mobile/member/wechatLogin";
                 String redirectUrl;
                 if (alipaySandbox){
                     redirectUrl = "https://openauth.alipaydev.com/oauth2/publicAppAuthorize.htm?app_id="+alipayAppid+"&scope=auth_user&redirect_uri="+URLEncoder.encode(url,"UTF-8");
@@ -115,6 +130,7 @@ public class MemberController extends AbstractController {
                 response.sendRedirect(s);
             }else{
                 //todo 提示请使用微信或支付宝扫描二维码
+                return "请使用微信或支付宝扫描二维码";
             }
 
         }
@@ -126,7 +142,7 @@ public class MemberController extends AbstractController {
     @GetMapping("/wechatLogin")
 //    @ResponseBody
     //https://www.jianshu.com/p/7882ee243298
-    public String wechatLogin(HttpServletResponse response, String code,String auth_code) throws WxErrorException, IOException, AlipayApiException {
+    public String wechatLogin(HttpSession session, HttpServletResponse response, String code, String auth_code) throws WxErrorException, IOException, AlipayApiException {
         WechatLoginDTO memberDTO = null;
         if (StringUtils.isNotBlank(code)){
             memberDTO = memberService.getMemberByWechatCode(code);
@@ -149,7 +165,7 @@ public class MemberController extends AbstractController {
         } catch (AuthorizationException e) {
             redirectUrl = redirectUrl + "-1";
         }
-        redirectUrl = redirectUrl +"&isNew="+(isNew?1:0);
+        redirectUrl = redirectUrl +"&isNew="+(isNew?1:0) + "&deviceId=" + session.getAttribute(deviceIdKey);
         response.sendRedirect(redirectUrl);
         return null;
     }

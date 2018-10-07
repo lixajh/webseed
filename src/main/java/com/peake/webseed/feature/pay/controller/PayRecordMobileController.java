@@ -5,6 +5,7 @@ import com.peake.webseed.core.AbstractController;
 import com.peake.webseed.core.Result;
 import com.peake.webseed.core.ResultGenerator;
 import com.peake.webseed.feature.order.model.Order;
+import com.peake.webseed.feature.pay.enums.EnumPayWay;
 import com.peake.webseed.feature.pay.model.PayRecord;
 import com.peake.webseed.feature.pay.service.PayRecordService;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public class PayRecordMobileController extends AbstractController  {
 
     @PostMapping("/getPayInfo")
     public Result getPayInfo(Order order) {
-        payRecordService.getPayInfo(order);
+        payRecordService.getPayInfo(order, EnumPayWay.alipay);
         return ResultGenerator.genSuccessResult();
     }
 

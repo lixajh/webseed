@@ -59,6 +59,5 @@ public class DeviceController extends AbstractController  {
     @PostMapping("/deviceMerchantList")
     public Result deviceMerchantList() {
         return merchantService.getAllMerchants();
-
     }
 }

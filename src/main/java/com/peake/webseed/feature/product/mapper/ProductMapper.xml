@@ -17,10 +17,10 @@
     <result column="pic_url" jdbcType="VARCHAR" property="picUrl" />
   </resultMap>
 
-  <update id="batchDelete">
-    update tbl_product set data_status ="-1"
+  <update id="batchUpdateStatus">
+    update tbl_product set data_status =#{status}
     where pk_id in
-    <foreach close=")" collection="array" index="index" item="item" open="(" separator=",">
+    <foreach close=")" collection="ids" index="index" item="item" open="(" separator=",">
       #{item,jdbcType=VARCHAR}
     </foreach>
   </update>

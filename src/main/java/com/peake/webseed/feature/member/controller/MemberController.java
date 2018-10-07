@@ -10,11 +10,11 @@ import com.peake.webseed.feature.member.model.Member;
 import com.peake.webseed.feature.member.model.MemberDetailDTO;
 import com.peake.webseed.feature.member.service.MemberService;
 import com.peake.webseed.utils.ShiroUtils;
-import com.peake.webseed.utils.StringUtils;
 import com.peake.webseed.utils.WechatUtils;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
@@ -34,7 +34,7 @@ import java.net.URLEncoder;
 @RestController
 @RequestMapping("/mobile/member")
 public class MemberController extends AbstractController {
-
+    String host = "peake.mynatapp.cc";
     Logger logger = LoggerFactory.getLogger(MemberController.class);
 
     @Value("${domain}")

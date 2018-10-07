@@ -39,8 +39,8 @@ public class ProductServiceImpl extends AbstractService<Product> implements Prod
     }
 
     @Override
-    public Result deleteByIds(Long[] ids) {
-        productMapper.batchDelete(ids);
+    public Result updateStatusByIds(Long[] ids, int status) {
+        productMapper.batchUpdateStatus(ids,status);
         return ResultGenerator.genSuccessResult();
     }
 

@@ -11,5 +11,6 @@ import com.peake.webseed.feature.product.model.Product;
  * Created by CodeGenerator on 2018/09/12.
  */
 public interface ProductService extends Service<Product> {
-    Result deleteByIds(Long[] ids);
+//    Result deleteByIds(Long[] ids);
+    Result updateStatusByIds(Long[] ids, int status);
 }

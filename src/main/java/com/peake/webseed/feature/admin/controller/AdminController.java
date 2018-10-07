@@ -59,7 +59,7 @@ public class AdminController extends AbstractController {
         }
     }
 
-    @PostMapping("/logout")
+    @RequestMapping("/logout")
     public Result logout() {
         ShiroUtils.logout();
         return ResultGenerator.genSuccessResult();

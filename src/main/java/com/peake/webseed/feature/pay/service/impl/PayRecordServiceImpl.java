@@ -197,11 +197,17 @@ public class PayRecordServiceImpl extends AbstractService<PayRecord> implements 
                 }
 
                 record.setUpdateTime(now());// 最后更新时间
-                int i = PayRecordMapper.updateByPrimaryKeySelective(record);
-                //todo 通知设备已支付
-                if (i <= 0) {
-                    return false;
+                update(record);
+                Order order = orderService.findById(record.getFkOrderId());
+                if (order != null){
+                    order.setUpdateTime(now());
+                    order.setOrderStatus(EnumOrderStatus.pay_up.getValue());
+                    orderService.update(order);
                 }
+                //todo 通知设备已支付
+
+
+
                 break;
             case pay_up:
                 break;

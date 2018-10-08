@@ -34,7 +34,6 @@ public class PayRecordMobileController extends AbstractController  {
     public Result getPayInfo(Order order) {
         VerifyUtils.verifyAllParamsNotNull(order.getFkDeviceId(),order.getFkProductId());
         return payRecordService.getPayInfo(order, EnumPayWay.alipay);
-//        return ResultGenerator.genSuccessResult();
     }
 
     @PostMapping("/delete")

@@ -18,4 +18,12 @@
     <result column="data_status" jdbcType="INTEGER" property="dataStatus" />
     <result column="fk_order_id" jdbcType="BIGINT" property="fkOrderId" />
   </resultMap>
+
+  <select id="findByOutTradeNo" resultMap="BaseResultMap">
+    select *
+    from tbl_pay_record a
+
+    where  a.out_trade_no =#{outTradeNo}
+
+  </select>
 </mapper>

@@ -8,6 +8,7 @@ import com.peake.webseed.feature.order.model.Order;
 import com.peake.webseed.feature.pay.enums.EnumPayWay;
 import com.peake.webseed.feature.pay.model.PayRecord;
 import com.peake.webseed.feature.pay.service.PayRecordService;
+import com.peake.webseed.utils.VerifyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,8 +32,9 @@ public class PayRecordMobileController extends AbstractController  {
 
     @PostMapping("/getPayInfo")
     public Result getPayInfo(Order order) {
-        payRecordService.getPayInfo(order, EnumPayWay.alipay);
-        return ResultGenerator.genSuccessResult();
+        VerifyUtils.verifyAllParamsNotNull(order.getFkDeviceId(),order.getFkProductId());
+        return payRecordService.getPayInfo(order, EnumPayWay.alipay);
+//        return ResultGenerator.genSuccessResult();
     }
 
     @PostMapping("/delete")

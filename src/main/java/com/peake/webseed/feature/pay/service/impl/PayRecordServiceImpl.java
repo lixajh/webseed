@@ -7,7 +7,13 @@ import com.alipay.api.request.AlipayTradeCreateRequest;
 import com.alipay.api.response.AlipayTradeCreateResponse;
 import com.peake.webseed.common.enums.EnumDataStatus;
 import com.peake.webseed.common.redis.CacheService;
+import com.peake.webseed.core.AbstractService;
 import com.peake.webseed.core.Result;
+import com.peake.webseed.core.ResultGenerator;
+import com.peake.webseed.feature.device.model.Device;
+import com.peake.webseed.feature.device.service.DeviceService;
+import com.peake.webseed.feature.merchant.service.MerchantService;
+import com.peake.webseed.feature.order.enums.EnumOrderStatus;
 import com.peake.webseed.feature.order.model.Order;
 import com.peake.webseed.feature.order.service.OrderService;
 import com.peake.webseed.feature.pay.enums.EnumPayStatus;
@@ -15,13 +21,15 @@ import com.peake.webseed.feature.pay.enums.EnumPayWay;
 import com.peake.webseed.feature.pay.mapper.PayRecordMapper;
 import com.peake.webseed.feature.pay.model.PayRecord;
 import com.peake.webseed.feature.pay.service.PayRecordService;
-import com.peake.webseed.core.AbstractService;
-import com.peake.webseed.utils.ShiroUtils;
+import com.peake.webseed.feature.product.enums.EnumProductDataStatus;
+import com.peake.webseed.feature.product.model.Product;
+import com.peake.webseed.feature.product.service.ProductService;
+import com.peake.webseed.utils.CodeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 
@@ -48,18 +56,56 @@ public class PayRecordServiceImpl extends AbstractService<PayRecord> implements 
     @Resource
     private CacheService cacheService;
     @Resource
+    private MerchantService merchantService;
+    @Resource
+    private ProductService productService;
+    @Resource
+    private DeviceService deviceService;
+    @Resource
     private PayRecordMapper PayRecordMapper;
 
     @Override
     public Result getPayInfo(Order order, EnumPayWay payWay) {
+        Device device = deviceService.findById(order.getFkDeviceId());
+        if (device == null || device.getDataStatus() == EnumDataStatus.del.getValue()){
+            return ResultGenerator.genFailResult("非法设备号，请重新扫描设备二维码");
+        }
+        order.setFkMerchantId(device.getFkMerchantId());
 
-       order.setCreateTime(now());
-       order.setDataStatus(EnumDataStatus.normal.getValue());
-       order.setOrderNo("2222");
-        return null;
+        Product product = productService.findById(order.getFkProductId());
+        if (product == null || product.getDataStatus() == EnumProductDataStatus.del.getValue()){
+            return ResultGenerator.genFailResult("非法商品,请刷新页面重试");
+        }
+        if (product.getDataStatus() == EnumProductDataStatus.not_sale.getValue()){
+            return ResultGenerator.genFailResult("该商品已被下架，请刷新页面或重新扫码进入");
+        }
+        order.setTotalFee(product.getPrice());
+        order.setPayFee(product.getPrice());
+
+        order.setFkMemberId(cacheService.getMemberInfo().getPkId());
+
+        order.setCreateTime(now());
+        order.setDataStatus(EnumDataStatus.normal.getValue());
+        order.setOrderNo(CodeUtils.genOutTradeNo());
+        order.setOrderStatus(EnumOrderStatus.to_pay.getValue());
+        order.setUpdateTime(now());
+       orderService.save(order);
+        try {
+            PayRecord payRecord = createPayInfo(order, payWay);
+            if (payRecord == null){
+                return ResultGenerator.genFailResult("支付信息获取失败");
+            }else{
+                return ResultGenerator.genSuccessResult(payRecord);
+            }
+
+        } catch (AlipayApiException e) {
+            e.printStackTrace();
+            return ResultGenerator.genFailResult("支付信息获取失败,msg:" + e.getErrMsg());
+        }
+
     }
 
-    private void createPayInfo(Order order,EnumPayWay payWay) throws AlipayApiException {
+    private PayRecord createPayInfo(Order order,EnumPayWay payWay) throws AlipayApiException {
 
         PayRecord payRecord = new PayRecord();
         payRecord.setAttach("");
@@ -79,9 +125,9 @@ public class PayRecordServiceImpl extends AbstractService<PayRecord> implements 
 //                "\"seller_id\":\""+payRecord.get()+"\"," +
                 "\"total_amount\":"+payRecord.getTotalFee() + "," +
 //                "\"discountable_amount\":8.88," +
-                "\"subject\":\""+"订单标题" +"\"," +
+                "\"subject\":\""+"测试订单" +"\"," +
 //                "\"body\":\"Iphone6 16G\"," +
-                "\"buyer_id\":\""+ cacheService.getMemberInfo().getOpenId()+"\"," +
+                "\"buyer_id\":\""+ cacheService.getMemberInfo().getOpenId()+"\"" +
 //                "      \"goods_detail\":[{" +
 //                "        \"goods_id\":\"apple-01\"," +
 //                "\"goods_name\":\"ipad\"," +
@@ -128,9 +174,41 @@ public class PayRecordServiceImpl extends AbstractService<PayRecord> implements 
 //            response.getTradeNo();
             payRecord.setTransactionNo(response.getTradeNo());
             save(payRecord);
-            System.out.println("调用成功");
+            return payRecord;
+//            System.out.println("调用成功");
         } else {
-            System.out.println("调用失败");
+//            System.out.println("调用失败");
+            return null;
         }
     }
+
+    @Override
+    public boolean paySuccess(String out_trade_no, String trade_no) {
+        PayRecord record = PayRecordMapper.findByOutTradeNo(out_trade_no);
+        if (record == null){
+            return false;
+        }
+        switch (EnumPayStatus.setValue(record.getPayStatus())) {
+            case to_pay:
+                record.setTransactionNo(trade_no);// 支付宝流水号
+                record.setPayStatus(EnumPayStatus.pay_up.getValue());// 已支付
+                if(record.getPayTime() == null){
+                    record.setPayTime(now());// 支付时间
+                }
+
+                record.setUpdateTime(now());// 最后更新时间
+                int i = PayRecordMapper.updateByPrimaryKeySelective(record);
+                //todo 通知设备已支付
+                if (i <= 0) {
+                    return false;
+                }
+                break;
+            case pay_up:
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
 }

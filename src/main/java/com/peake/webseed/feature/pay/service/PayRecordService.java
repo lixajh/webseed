@@ -11,4 +11,6 @@ import com.peake.webseed.core.Service;
  */
 public interface PayRecordService extends Service<PayRecord> {
     Result getPayInfo(Order order, EnumPayWay payWay);
+
+    boolean paySuccess(String out_trade_no, String trade_no);
 }

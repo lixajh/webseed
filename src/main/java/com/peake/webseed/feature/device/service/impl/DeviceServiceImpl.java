@@ -39,4 +39,10 @@ public class DeviceServiceImpl extends AbstractService<Device> implements Device
         deviceMapper.batchDelete(ids);
         return ResultGenerator.genSuccessResult();
     }
+
+    @Override
+    public Device findDeviceByCode(String code) {
+        return deviceMapper.findByCode(code);
+
+    }
 }

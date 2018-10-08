@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface DeviceMapper extends Mapper<Device> {
 
     void batchDelete(Long ids[]);
+
+    Device findByCode(String code);
 }

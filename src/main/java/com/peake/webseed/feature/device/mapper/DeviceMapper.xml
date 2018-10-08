@@ -45,4 +45,14 @@
     </foreach>
   </update>
 
+  <select id="findByCode" resultMap="BaseResultMap">
+    select a.pk_id, a.name, a.code, a.data_status, a.online,a.remark, a.update_time,a.create_time,a.address,a.fk_merchant_id,a.fk_type_id,a.offline_time
+    from tbl_device a
+
+    where a.data_status != -1
+
+      and a.code =#{code}
+
+  </select>
+
 </mapper>

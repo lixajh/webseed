@@ -10,4 +10,6 @@ import com.peake.webseed.core.Service;
 public interface DeviceService extends Service<Device> {
 
     Result deleteByIds(Long[] ids);
+
+    Device findDeviceByCode(String code);
 }

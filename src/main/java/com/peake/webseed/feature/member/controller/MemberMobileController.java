@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -35,10 +34,10 @@ import java.net.URLEncoder;
  */
 @RestController
 @RequestMapping("/mobile/member")
-public class MemberController extends AbstractController {
+public class MemberMobileController extends AbstractController {
     public static final String deviceIdKey = "deviceId";
     String host = "peake.mynatapp.cc";
-    Logger logger = LoggerFactory.getLogger(MemberController.class);
+    Logger logger = LoggerFactory.getLogger(MemberMobileController.class);
 
     @Value("${domain}")
     private String domain;

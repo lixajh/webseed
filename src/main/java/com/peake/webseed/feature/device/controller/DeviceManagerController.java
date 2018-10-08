@@ -20,9 +20,9 @@ import javax.annotation.Resource;
 */
 @RestController
 @RequestMapping("/manager/device")
-public class DeviceController extends AbstractController  {
+public class DeviceManagerController extends AbstractController  {
 
-    Logger logger = LoggerFactory.getLogger(DeviceController.class);
+    Logger logger = LoggerFactory.getLogger(DeviceManagerController.class);
 
     @Resource
     private DeviceService deviceService;
@@ -48,6 +48,11 @@ public class DeviceController extends AbstractController  {
     @PostMapping("/detail")
     public Result detail(@RequestParam Long id) {
         Device device = deviceService.findById(id);
+        return ResultGenerator.genSuccessResult(device);
+    }
+    @PostMapping("/detailByCode")
+    public Result detailByCode(@RequestParam String code) {
+        Device device = deviceService.findDeviceByCode(code);
         return ResultGenerator.genSuccessResult(device);
     }
 

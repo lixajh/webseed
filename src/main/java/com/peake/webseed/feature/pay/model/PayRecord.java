@@ -1,11 +1,16 @@
 package com.peake.webseed.feature.pay.model;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
-import javax.persistence.*;
 
 @Table(name = "tbl_pay_record")
 public class PayRecord {
+    @Id
+    @GeneratedValue(generator = "JDBC")
     @Column(name = "pk_id")
     private Long pkId;
 

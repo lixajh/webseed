@@ -42,16 +42,16 @@
 
     where o.order_status != 0
     <if test="obj.orderNo != null and obj.orderNo != ''">
-      AND o.order_no like "%"#{obj.orderNo,jdbcType=VARCHAR}"%"
+      AND o.order_no like  concat('%' ,#{obj.orderNo}, '%')
     </if>
     <if test="obj.merchantName != null and obj.merchantName != ''">
-      AND mc.name like "%"#{obj.merchantName,jdbcType=VARCHAR}"%"
+      AND mc.name like  concat('%' ,#{obj.merchantName}, '%')
     </if>
     <if test="obj.orderStatus != null and obj.orderStatus != ''">
       AND o.order_status = #{obj.orderStatus,jdbcType=VARCHAR}
     </if>
     <if test="obj.transactionNo != null and obj.transactionNo != ''">
-      AND pr.transaction_no  like "%"#{obj.transactionNo,jdbcType=VARCHAR}"%"
+      AND pr.transaction_no  like concat('%' ,#{obj.transactionNo}, '%')
     </if>
     order by o.create_time desc
   </select>

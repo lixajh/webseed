@@ -8,9 +8,9 @@ import java.util.Map;
 
 public class RequestParamsUtils {
 	
-	public static Map<String,Object> getParamsMap(HttpServletRequest request){
-		
-		Map<String,Object> params = new HashMap<String,Object>();
+	public static HashMap<String,Object> getParamsMap(HttpServletRequest request){
+
+		HashMap<String,Object> params = new HashMap<String,Object>();
 		Map requestParams = request.getParameterMap();
 		for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext();) {
 			String name = (String) iter.next();

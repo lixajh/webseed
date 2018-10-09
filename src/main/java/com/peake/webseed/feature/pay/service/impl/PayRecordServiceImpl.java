@@ -107,7 +107,6 @@ public class PayRecordServiceImpl extends AbstractService<PayRecord> implements 
             e.printStackTrace();
             return ResultGenerator.genFailResult("支付信息获取失败,msg:" + e.getErrMsg());
         }
-
     }
 
     private PayRecord createPayInfo(Order order,EnumPayWay payWay) throws AlipayApiException {

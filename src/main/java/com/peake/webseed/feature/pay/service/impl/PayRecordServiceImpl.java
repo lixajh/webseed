@@ -51,6 +51,10 @@ public class PayRecordServiceImpl extends AbstractService<PayRecord> implements 
     private String alipayPrivateKey;
     @Value("${alipay.public_key}")
     private String alipayPublicKey;
+
+    @Value("${domain}")
+    private String domain;
+
     @Resource
     private OrderService orderService;
     @Resource
@@ -120,6 +124,10 @@ public class PayRecordServiceImpl extends AbstractService<PayRecord> implements 
 
         AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do", alipayAppid, alipayPrivateKey, "json", "GBK", alipayPublicKey, "RSA2");
         AlipayTradeCreateRequest request = new AlipayTradeCreateRequest();
+
+//        request.setReturnUrl(alipayConfig.getReturn_url());
+        request.setNotifyUrl(domain+"/server/manager/pay/alipay/notify");// 在公共参数中设置回跳和通知地址
+
         request.setBizContent("{" +
                 "\"out_trade_no\":\""+payRecord.getOutTradeNo()+"\"," +
 //                "\"seller_id\":\""+payRecord.get()+"\"," +

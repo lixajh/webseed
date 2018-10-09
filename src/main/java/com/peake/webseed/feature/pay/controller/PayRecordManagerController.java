@@ -25,7 +25,7 @@ import java.util.Map;
 * Created by CodeGenerator on 2018/10/07.
 */
 @RestController
-@RequestMapping("server/pay")
+@RequestMapping("manager/pay")
 public class PayRecordManagerController extends AbstractController  {
 
     Logger logger = LoggerFactory.getLogger(PayRecordManagerController.class);
@@ -33,11 +33,11 @@ public class PayRecordManagerController extends AbstractController  {
     @Resource
     private PayRecordService payRecordService;
 
-    @PostMapping("/getPayInfo")
-    public Result getPayInfo(PayRecord payRecord) {
-        payRecordService.save(payRecord);
-        return ResultGenerator.genSuccessResult();
-    }
+//    @PostMapping("/getPayInfo")
+//    public Result getPayInfo(PayRecord payRecord) {
+//        payRecordService.save(payRecord);
+//        return ResultGenerator.genSuccessResult();
+//    }
 
     @PostMapping("/delete")
     public Result delete(@RequestParam Long id) {

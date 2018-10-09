@@ -20,4 +20,61 @@
     <result column="fk_merchant_id" jdbcType="BIGINT" property="fkMerchantId" />
     <result column="fk_device_id" jdbcType="BIGINT" property="fkDeviceId" />
   </resultMap>
+
+  <select id="findMapByCustomPage" resultType="java.util.HashMap">
+    select
+    o.pk_id pkId, o.order_no orderNo, o.total_fee totalFee, o.pay_fee payFee, o.order_status orderStatus, o.create_time createTime, o.update_time updateTime, o.remark,
+    mc.name  merchantName,
+    d.code deviceCode,
+    p.name productName,
+    pr.pay_time payTime,
+    pr.transaction_no transactionNo,
+    m.nickname nickname,
+    m.open_id openId
+
+    FROM
+    tbl_order o
+    LEFT JOIN tbl_merchant mc ON o.fk_merchant_id = mc.pk_id
+    LEFT JOIN tbl_device d ON o.fk_device_id	= d.pk_id
+    LEFT JOIN tbl_product p ON o.fk_product_id = p.pk_id
+    LEFT JOIN tbl_pay_record pr ON pr.fk_order_id	= o.pk_id
+    LEFT JOIN tbl_member m ON m.pk_id	= o.fk_member_id
+
+    where o.order_status != 0
+    <if test="obj.orderNo != null and obj.orderNo != ''">
+      AND o.order_no like "%"#{obj.orderNo,jdbcType=VARCHAR}"%"
+    </if>
+    <if test="obj.merchantName != null and obj.merchantName != ''">
+      AND mc.name like "%"#{obj.merchantName,jdbcType=VARCHAR}"%"
+    </if>
+    <if test="obj.orderStatus != null and obj.orderStatus != ''">
+      AND o.order_status = #{obj.orderStatus,jdbcType=VARCHAR}
+    </if>
+    <if test="obj.transactionNo != null and obj.transactionNo != ''">
+      AND pr.transaction_no  like "%"#{obj.transactionNo,jdbcType=VARCHAR}"%"
+    </if>
+    order by o.create_time desc
+  </select>
+
+  <select id="findDetailById" resultType="java.util.HashMap">
+    select
+    o.pk_id pkId, o.order_no orderNo, o.total_fee totalFee, o.pay_fee payFee, o.order_status orderStatus, o.create_time createTime, o.update_time updateTime, o.remark,
+    mc.name  merchantName,
+    d.code deviceCode,
+    p.name productName,
+    pr.pay_time payTime,
+    pr.transaction_no transactionNo,
+    m.nickname nickname,
+    m.open_id openId
+
+    FROM
+    tbl_order o
+    LEFT JOIN tbl_merchant mc ON o.fk_merchant_id = mc.pk_id
+    LEFT JOIN tbl_device d ON o.fk_device_id	= d.pk_id
+    LEFT JOIN tbl_product p ON o.fk_product_id = p.pk_id
+    LEFT JOIN tbl_pay_record pr ON pr.fk_order_id	= o.pk_id
+    LEFT JOIN tbl_member m ON m.pk_id	= o.fk_member_id
+
+    where o.pk_id = #{id}
+  </select>
 </mapper>

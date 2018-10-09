@@ -15,7 +15,9 @@ import tk.mybatis.mapper.entity.Example;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 基于通用MyBatis Mapper插件的Service接口的实现
@@ -114,6 +116,14 @@ public abstract class AbstractService<T> implements Service<T> {
 
         PageHelper.startPage(page, size);
         List<T> list = mapper.findByCustomCondition(o);
+        PageInfo pageInfo = new PageInfo(list);
+        return pageInfo;
+    }
+
+    @Override
+    public PageInfo findMapByCustomPage(Integer page, Integer size, HashMap<String, Object> o) {
+        PageHelper.startPage(page, size);
+        List<Map<String,Object>> list = mapper.findMapByCustomPage(o);
         PageInfo pageInfo = new PageInfo(list);
         return pageInfo;
     }

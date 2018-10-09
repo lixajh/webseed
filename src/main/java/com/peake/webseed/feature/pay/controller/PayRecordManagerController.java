@@ -6,7 +6,6 @@ import com.peake.webseed.core.Result;
 import com.peake.webseed.core.ResultGenerator;
 import com.peake.webseed.feature.pay.model.PayRecord;
 import com.peake.webseed.feature.pay.service.PayRecordService;
-import com.peake.webseed.mqtt.MqttPushClient;
 import com.peake.webseed.utils.RequestParamsUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +76,7 @@ public class PayRecordManagerController extends AbstractController  {
             // 支付成功
             // 处理订单
             boolean flag = payRecordService.paySuccess(out_trade_no, trade_no);
-            MqttPushClient.getInstance().publish("tokudu/yzq124","sdfddd32323");
+
             if (flag) {
                 // 给支付宝返回响应消息,必须,否则支付宝会持续通知
                 response.getWriter().println("success"); // 请不要修改或删除

@@ -7,7 +7,9 @@ import tk.mybatis.mapper.common.ExampleMapper;
 import tk.mybatis.mapper.common.IdsMapper;
 import tk.mybatis.mapper.common.special.InsertListMapper;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 定制版MyBatis Mapper插件接口，如需其他接口参考官方文档自行添加。
@@ -21,4 +23,7 @@ public interface Mapper<T>
         ExampleMapper<T> {
 
     List<T> findByCustomCondition(@Param("obj") T o);
+    List<Map<String,Object>> findMapByCustomPage(@Param("obj") HashMap<String,Object> o);
+
+
 }

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.annotation.Resource;
+import java.util.HashMap;
 
 
 /**
@@ -21,6 +22,12 @@ public class OrderServiceImpl extends AbstractService<Order> implements OrderSer
     Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     @Resource
-    private OrderMapper OrderMapper;
+    private OrderMapper orderMapper;
 
+    @Override
+    public HashMap<String, Object> findDetailById(long id) {
+        return orderMapper.findDetailById(id);
+    }
 }
+
+

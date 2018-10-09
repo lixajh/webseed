@@ -24,6 +24,7 @@ import com.peake.webseed.feature.pay.service.PayRecordService;
 import com.peake.webseed.feature.product.enums.EnumProductDataStatus;
 import com.peake.webseed.feature.product.model.Product;
 import com.peake.webseed.feature.product.service.ProductService;
+import com.peake.webseed.mqtt.MqttPushClient;
 import com.peake.webseed.utils.CodeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,7 +127,7 @@ public class PayRecordServiceImpl extends AbstractService<PayRecord> implements 
         AlipayTradeCreateRequest request = new AlipayTradeCreateRequest();
 
 //        request.setReturnUrl(alipayConfig.getReturn_url());
-        request.setNotifyUrl(domain+"/server/manager/pay/alipay/notify");// 在公共参数中设置回跳和通知地址
+        request.setNotifyUrl(domain+"server/manager/pay/alipay/notify");// 在公共参数中设置回跳和通知地址
 
         request.setBizContent("{" +
                 "\"out_trade_no\":\""+payRecord.getOutTradeNo()+"\"," +
@@ -213,7 +214,10 @@ public class PayRecordServiceImpl extends AbstractService<PayRecord> implements 
                     orderService.update(order);
                 }
                 //todo 通知设备已支付
+                Device device = deviceService.findById(order.getFkDeviceId());
 
+                logger.info("订单（" + order.getOrderNo()+")支付成功，将通知设备"+  device.getCode());
+                MqttPushClient.getInstance().publish("tokudu/yzq124","code：" + device.getCode());
 
 
                 break;

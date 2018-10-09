@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import tk.mybatis.mapper.entity.Condition;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -23,5 +24,6 @@ public interface Service<T> {
     List<T> findByExample(Object o);
     PageInfo findbyPage(Integer page, Integer size, String orderby, T o);
     PageInfo findbyCustomPage(Integer page, Integer size, T o);
+    PageInfo findMapByCustomPage(Integer page, Integer size, HashMap<String,Object> o);
     Result add(T model);
 }

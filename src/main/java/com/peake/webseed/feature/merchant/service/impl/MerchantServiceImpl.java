@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 
@@ -51,5 +52,10 @@ public class MerchantServiceImpl extends AbstractService<Merchant> implements Me
         example.orderBy("name");
         List<Merchant> list = findByExample(example);
         return ResultGenerator.genSuccessResult(list);
+    }
+
+    @Override
+    public List<Merchant> findMerchantCreatedBefore(Date date) {
+        return merchantMapper.findMerchantCreatedBefore(date);
     }
 }

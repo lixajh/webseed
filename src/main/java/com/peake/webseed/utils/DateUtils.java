@@ -4,6 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 public class DateUtils {
@@ -98,4 +101,9 @@ public class DateUtils {
         return new Date();
     }
 
+    public static Date localDate2Date(LocalDate localDate){
+        ZoneId zoneId = ZoneId.systemDefault();
+        ZonedDateTime zdt = localDate.atStartOfDay(zoneId);
+       return Date.from(zdt.toInstant());
+    }
 }

@@ -100,6 +100,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/mobile/member/toAuth", "anon");
         filterChainDefinitionMap.put("/s/s/**", "anon");
         filterChainDefinitionMap.put("/manager/pay/alipay/notify", "anon");//支付宝支付成功回调地址
+        filterChainDefinitionMap.put("/manager/merchantchart/gen", "anon");//todo 测试用，生产环境删除
         filterChainDefinitionMap.put("/**", "authc");
 //        filterChainDefinitionMap.put("/**", "anon");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

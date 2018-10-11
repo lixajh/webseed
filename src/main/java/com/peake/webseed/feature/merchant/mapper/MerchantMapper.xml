@@ -26,4 +26,15 @@
       #{item,jdbcType=VARCHAR}
     </foreach>
   </update>
+
+  <select id="findMerchantCreatedBefore" resultMap="BaseResultMap">
+    select
+    *
+    FROM
+    tbl_merchant m
+    where m.data_status != -1
+    and m.create_time &lt; #{date}
+    order by m.create_time desc
+  </select>
+
 </mapper>

@@ -1,5 +1,8 @@
 package com.peake.webseed.feature.pay.enums;
 
+/**
+ * 支付方式
+ */
 public enum EnumPayWay {
 
 

@@ -1,5 +1,8 @@
 package com.peake.webseed.feature.pay.enums;
 
+/**
+ * 支付状态
+ */
 public enum EnumPayStatus {
 
 //0:待支付，1支付成功，2支付失败，3支付超时，4支付取消,5交易不存在 ，6交易关闭

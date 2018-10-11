@@ -15,9 +15,9 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
-//import com.peake.webseed.feature.admin.model.Admin;
-//import com.peake.webseed.feature.admin.service.AdminService;
-
+/**
+ * 管理后台用户的Realm
+ */
 public class AdminRealm extends AuthorizingRealm {
     /*	@Autowired
         UserDao userMapper;

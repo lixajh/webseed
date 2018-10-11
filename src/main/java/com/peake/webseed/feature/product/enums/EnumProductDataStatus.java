@@ -1,5 +1,8 @@
 package com.peake.webseed.feature.product.enums;
 
+/**
+ * 产品状态
+ */
 public enum EnumProductDataStatus {
 
 

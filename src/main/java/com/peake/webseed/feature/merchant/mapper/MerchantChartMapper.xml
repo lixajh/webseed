@@ -50,4 +50,43 @@
     AND end_date =  #{endTime}
     AND fk_merchant_id =  #{merchantId}
   </select>
+
+  <select id="findMapByCustomPage" resultType="java.util.HashMap">
+    SELECT
+    mc. NAME name,
+    mc.data_status dataStatus,
+    mc.create_time createTime,
+    mc.update_time updateTime,
+    IFNULL(mc.order_count,0.00) orderCount,
+    mc.bonus_cal_type bounsCalType,
+    IFNULL(mc.bonus_ratio,0.00) bounsRatio,
+    IFNULL(mc.total_amount,0.00) totalAmount,
+    IFNULL(mc.pay_amount,0.00) payAmount,
+    IFNULL(mc.cal_bonus,0.00) calBouns,
+    IFNULL(mc.real_bonus,0.00) realBouns,
+    mc.remark remark,
+    m.name merchantName
+    FROM
+    tbl_merchant_chart mc
+    LEFT JOIN tbl_merchant m ON m.pk_id = mc.fk_merchant_id
+
+    where m.data_status != -1
+    <if test="obj.merchantName != null and obj.merchantName != ''">
+      and m.name like  concat('%' ,#{obj.merchantName}, '%')
+    </if>
+
+    <if test="obj.dataStatus != null">
+      and mc.data_status = #{obj.dataStatus}
+    </if>
+
+    <if test="obj.startTime != null and obj.startTime != ''">
+      and mc.start_date &gt;= #{obj.startTime}
+    </if>
+
+    <if test="obj.endTime != null and obj.endTime != ''">
+      and mc.end_date &lt;=  #{obj.endTime}
+    </if>
+
+    order by mc.create_time DESC
+  </select>
 </mapper>

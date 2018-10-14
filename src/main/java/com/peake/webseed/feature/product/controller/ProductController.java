@@ -67,7 +67,7 @@ public class ProductController extends AbstractController  {
 
     @PostMapping("/list")
     public Result list(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, Product product) {
-        PageInfo pageInfo = productService.findbyPage(page,size,"createTime",product);
+        PageInfo pageInfo = productService.findbyCustomPage(page,size,product);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 }

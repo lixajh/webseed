@@ -52,7 +52,7 @@ public class MerchantController extends AbstractController  {
 
     @PostMapping("/list")
     public Result list(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, Merchant merchant) {
-       PageInfo pageInfo = merchantService.findbyPage(page,size,"createTime",merchant);
+       PageInfo pageInfo = merchantService.findbyCustomPage(page,size,merchant);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 }

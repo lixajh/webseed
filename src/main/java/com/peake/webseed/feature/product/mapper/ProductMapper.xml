@@ -24,4 +24,25 @@
       #{item,jdbcType=VARCHAR}
     </foreach>
   </update>
+
+  <select id="findByCustomCondition" resultMap="BaseResultMap">
+    select a.*
+    from tbl_product a
+
+    where a.data_status != -1
+    <if test="obj.name != null and obj.name != ''">
+      and a.name like  concat('%' ,#{obj.name}, '%')
+    </if>
+
+    <if test="obj.title != null and obj.title != ''">
+      and a.title like  concat('%' ,#{obj.title}, '%')
+    </if>
+
+    <if test="obj.dataStatus != null">
+      and a.data_status = #{obj.dataStatus}
+    </if>
+
+    order by a.create_time DESC
+  </select>
+
 </mapper>

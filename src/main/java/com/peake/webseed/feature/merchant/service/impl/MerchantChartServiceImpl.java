@@ -42,6 +42,9 @@ public class MerchantChartServiceImpl extends AbstractService<MerchantChart> imp
         List<Merchant> merchantList = merchantService.findMerchantCreatedBefore(DateUtils.localDate2Date(beforeDate));//获取下个月1号之前创建的所有商家
         for (Merchant merchant: merchantList){
             try {
+                if (merchant.getDeviceCount() <= 0){
+                    break;
+                }
                 genMerchantMonthChart(merchant.getPkId(),date);
             }catch (Exception e){
                 logger.error(e.getMessage());

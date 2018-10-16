@@ -21,6 +21,10 @@ public class ProductSnapshotServiceImpl extends AbstractService<ProductSnapshot>
     Logger logger = LoggerFactory.getLogger(ProductSnapshotServiceImpl.class);
 
     @Resource
-    private ProductSnapshotMapper ProductSnapshotMapper;
+    private ProductSnapshotMapper productSnapshotMapper;
 
+    @Override
+    public ProductSnapshot getSnapshotByProductId(long productId) {
+        return productSnapshotMapper.getSnapshotByProductId(productId);
+    }
 }

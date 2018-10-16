@@ -1,5 +1,7 @@
 package com.peake.webseed.feature.product.model;
 
+import com.peake.webseed.utils.DateUtils;
+
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -271,15 +273,15 @@ public class ProductSnapshot {
     }
     public ProductSnapshot(Product product) {
        this.createTime = product.getCreateTime();
-       this.dataStatus = product.getDataStatus();
+//       this.dataStatus = product.getDataStatus();
        this.fkProductId = product.getPkId();
        this.itemDesc = product.getItemDesc();
        this.md5 = product.getMd5();
        this.name = product.getName();
        this.picUrl = product.getPicUrl();
        this.price = product.getPrice();
-       this.remark = product.getRemark();
+//       this.remark = product.getRemark();
        this.title = product.getTitle();
-       this.updateTime = product.getUpdateTime();
+       this.updateTime = DateUtils.now();;
     }
 }

@@ -23,7 +23,9 @@ import com.peake.webseed.feature.pay.model.PayRecord;
 import com.peake.webseed.feature.pay.service.PayRecordService;
 import com.peake.webseed.feature.product.enums.EnumProductDataStatus;
 import com.peake.webseed.feature.product.model.Product;
+import com.peake.webseed.feature.product.model.ProductSnapshot;
 import com.peake.webseed.feature.product.service.ProductService;
+import com.peake.webseed.feature.product.service.ProductSnapshotService;
 import com.peake.webseed.mqtt.MqttPushClient;
 import com.peake.webseed.utils.CodeUtils;
 import org.slf4j.Logger;
@@ -68,6 +70,8 @@ public class PayRecordServiceImpl extends AbstractService<PayRecord> implements 
     private DeviceService deviceService;
     @Resource
     private PayRecordMapper PayRecordMapper;
+    @Resource
+    private ProductSnapshotService productSnapshotService;
 
     @Override
     public Result getPayInfo(Order order, EnumPayWay payWay) {
@@ -86,6 +90,8 @@ public class PayRecordServiceImpl extends AbstractService<PayRecord> implements 
         }
         order.setTotalFee(product.getPrice());
         order.setPayFee(product.getPrice());
+        ProductSnapshot productSnapshot = productSnapshotService.getSnapshotByProductId(product.getPkId());
+        order.setFkProductSnapshotId(productSnapshot.getPkId());
 
         order.setFkMemberId(cacheService.getMemberInfo().getPkId());
 
@@ -94,6 +100,7 @@ public class PayRecordServiceImpl extends AbstractService<PayRecord> implements 
         order.setOrderNo(CodeUtils.genOutTradeNo());
         order.setOrderStatus(EnumOrderStatus.to_pay.getValue());
         order.setUpdateTime(now());
+
        orderService.save(order);
         try {
             PayRecord payRecord = createPayInfo(order, payWay);

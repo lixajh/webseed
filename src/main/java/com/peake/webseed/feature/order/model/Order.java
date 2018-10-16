@@ -1,8 +1,11 @@
 package com.peake.webseed.feature.order.model;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
-import javax.persistence.*;
 
 @Table(name = "tbl_order")
 public class Order {
@@ -68,16 +71,22 @@ public class Order {
     private Long fkProductId;
 
     /**
-     * 商品id
+     * 商家id
      */
     @Column(name = "fk_merchant_id")
     private Long fkMerchantId;
 
     /**
-     * 商品id
+     * 设备id
      */
     @Column(name = "fk_device_id")
     private Long fkDeviceId;
+
+    /**
+     * 商品快照id
+     */
+    @Column(name = "fk_product_snapshot_id")
+    private Long fkProductSnapshotId;
 
     /**
      * @return pk_id
@@ -280,38 +289,56 @@ public class Order {
     }
 
     /**
-     * 获取商品id
+     * 获取商家id
      *
-     * @return fk_merchant_id - 商品id
+     * @return fk_merchant_id - 商家id
      */
     public Long getFkMerchantId() {
         return fkMerchantId;
     }
 
     /**
-     * 设置商品id
+     * 设置商家id
      *
-     * @param fkMerchantId 商品id
+     * @param fkMerchantId 商家id
      */
     public void setFkMerchantId(Long fkMerchantId) {
         this.fkMerchantId = fkMerchantId;
     }
 
     /**
-     * 获取商品id
+     * 获取设备id
      *
-     * @return fk_device_id - 商品id
+     * @return fk_device_id - 设备id
      */
     public Long getFkDeviceId() {
         return fkDeviceId;
     }
 
     /**
-     * 设置商品id
+     * 设置设备id
      *
-     * @param fkDeviceId 商品id
+     * @param fkDeviceId 设备id
      */
     public void setFkDeviceId(Long fkDeviceId) {
         this.fkDeviceId = fkDeviceId;
+    }
+
+    /**
+     * 获取商品快照id
+     *
+     * @return fk_product_snapshot_id - 商品快照id
+     */
+    public Long getFkProductSnapshotId() {
+        return fkProductSnapshotId;
+    }
+
+    /**
+     * 设置商品快照id
+     *
+     * @param fkProductSnapshotId 商品快照id
+     */
+    public void setFkProductSnapshotId(Long fkProductSnapshotId) {
+        this.fkProductSnapshotId = fkProductSnapshotId;
     }
 }

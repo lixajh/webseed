@@ -19,6 +19,7 @@
     <result column="fk_product_id" jdbcType="BIGINT" property="fkProductId" />
     <result column="fk_merchant_id" jdbcType="BIGINT" property="fkMerchantId" />
     <result column="fk_device_id" jdbcType="BIGINT" property="fkDeviceId" />
+    <result column="fk_product_snapshot_id" jdbcType="BIGINT" property="fkProductSnapshotId" />
   </resultMap>
 
   <select id="findMapByCustomPage" resultType="java.util.HashMap">

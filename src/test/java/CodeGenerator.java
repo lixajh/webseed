@@ -41,7 +41,7 @@ public class CodeGenerator {
 //        genCode("member", "tbl_member");
 //        genCode("device", "tbl_device");
 //        genCode("product", "tbl_product_snapshot");
-//        genModelAndMapper("tbl_product", "Product", "product");
+        genModelAndMapper("tbl_order", "Order", "order");
 //        genCode("member", "tbl_member_plus");
 //        genCode("wechatmp", "tbl_tv_show");
 //        genCode("wechatmp", "tbl_news");

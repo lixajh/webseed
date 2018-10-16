@@ -6,6 +6,5 @@ import com.peake.webseed.feature.order.model.Order;
 import java.util.HashMap;
 
 public interface OrderMapper extends Mapper<Order> {
-
     HashMap<String, Object> findDetailById(long id);
 }

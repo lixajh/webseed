@@ -41,7 +41,7 @@ public class ProductServiceImpl extends AbstractService<Product> implements Prod
         product.setDataStatus(EnumDataStatus.normal.getValue());
         product.setMd5(product.calMd5());
         save(product);
-        productSnapshotService.add(new ProductSnapshot(product));
+        productSnapshotService.save(new ProductSnapshot(product));
         return ResultGenerator.genSuccessResult();
     }
 

@@ -18,4 +18,14 @@
     <result column="fk_product_id" jdbcType="BIGINT" property="fkProductId" />
     <result column="md5" jdbcType="VARCHAR" property="md5" />
   </resultMap>
+
+  <select id="getSnapshotByProductId" resultMap="BaseResultMap">
+    select a.*
+    from tbl_product_snapshot a
+
+    where 1=1
+    and a.fk_product_id = #{productId}
+    order by a.update_time DESC limit 1
+  </select>
+
 </mapper>

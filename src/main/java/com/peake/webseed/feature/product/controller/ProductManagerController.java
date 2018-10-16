@@ -10,6 +10,7 @@ import com.peake.webseed.feature.product.model.Product;
 import com.peake.webseed.feature.product.model.ProductSnapshot;
 import com.peake.webseed.feature.product.service.ProductService;
 import com.peake.webseed.feature.product.service.ProductSnapshotService;
+import com.peake.webseed.utils.DateUtils;
 import com.peake.webseed.utils.VerifyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,13 +64,16 @@ public class ProductManagerController extends AbstractController  {
 
     @PostMapping("/update")
     public Result update(Product product) {
+        product.setUpdateTime(DateUtils.now());
         productService.update(product);
         Product newProduct = productService.findById(product.getPkId());
+        String a = newProduct.calMd5();
+        System.out.println(a);
         if (!newProduct.calMd5().equals(newProduct.getMd5())){
             //如果新旧的md5不同，更新md5并增加快照
             newProduct.setMd5(newProduct.calMd5());
-            productService.update(product);
-            productSnapshotService.add(new ProductSnapshot(newProduct));
+            productService.update(newProduct);
+            productSnapshotService.save(new ProductSnapshot(newProduct));
         }
 
         return ResultGenerator.genSuccessResult();

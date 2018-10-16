@@ -6,7 +6,9 @@ import com.peake.webseed.core.Result;
 import com.peake.webseed.core.ResultGenerator;
 import com.peake.webseed.feature.product.mapper.ProductMapper;
 import com.peake.webseed.feature.product.model.Product;
+import com.peake.webseed.feature.product.model.ProductSnapshot;
 import com.peake.webseed.feature.product.service.ProductService;
+import com.peake.webseed.feature.product.service.ProductSnapshotService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,9 @@ public class ProductServiceImpl extends AbstractService<Product> implements Prod
     @Resource
     private ProductMapper productMapper;
 
+    @Resource
+    private ProductSnapshotService productSnapshotService;
+
 
     @Override
     public Result add(Product product) {
@@ -34,7 +39,9 @@ public class ProductServiceImpl extends AbstractService<Product> implements Prod
         product.setCreateTime(now());
         product.setUpdateTime(now());
         product.setDataStatus(EnumDataStatus.normal.getValue());
+        product.setMd5(product.calMd5());
         save(product);
+        productSnapshotService.add(new ProductSnapshot(product));
         return ResultGenerator.genSuccessResult();
     }
 
@@ -43,5 +50,7 @@ public class ProductServiceImpl extends AbstractService<Product> implements Prod
         productMapper.batchUpdateStatus(ids,status);
         return ResultGenerator.genSuccessResult();
     }
+
+
 
 }

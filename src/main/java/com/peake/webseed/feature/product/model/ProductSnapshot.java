@@ -1,9 +1,5 @@
 package com.peake.webseed.feature.product.model;
 
-import com.peake.webseed.utils.JSONUtils;
-import com.peake.webseed.utils.PasswordUtils;
-import org.springframework.beans.BeanUtils;
-
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -11,8 +7,8 @@ import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Table(name = "tbl_product")
-public class Product {
+@Table(name = "tbl_product_snapshot")
+public class ProductSnapshot {
     @Id
     @GeneratedValue(generator = "JDBC")
     @Column(name = "pk_id")
@@ -63,8 +59,11 @@ public class Product {
     private String picUrl;
 
     /**
-     * 将本字段置为空的所有字段转换为json后，取md5值
+     * 商品id
      */
+    @Column(name = "fk_product_id")
+    private Long fkProductId;
+
     private String md5;
 
     /**
@@ -236,31 +235,51 @@ public class Product {
     }
 
     /**
-     * 获取将本字段置为空的所有字段转换为json后，取md5值
+     * 获取商品id
      *
-     * @return md5 - 将本字段置为空的所有字段转换为json后，取md5值
+     * @return fk_product_id - 商品id
+     */
+    public Long getFkProductId() {
+        return fkProductId;
+    }
+
+    /**
+     * 设置商品id
+     *
+     * @param fkProductId 商品id
+     */
+    public void setFkProductId(Long fkProductId) {
+        this.fkProductId = fkProductId;
+    }
+
+    /**
+     * @return md5
      */
     public String getMd5() {
         return md5;
     }
 
     /**
-     * 设置将本字段置为空的所有字段转换为json后，取md5值
-     *
-     * @param md5 将本字段置为空的所有字段转换为json后，取md5值
+     * @param md5
      */
     public void setMd5(String md5) {
         this.md5 = md5;
     }
 
-    public String calMd5(){
-        Product md5Product = new Product();
-        BeanUtils.copyProperties(this,md5Product);
-        md5Product.setMd5(null);
-        md5Product.setUpdateTime(null);
-        md5Product.setDataStatus(0);
-        md5Product.setRemark(null);
-        String json = JSONUtils.beanToJson(md5Product);
-        return PasswordUtils.md5(json);
+    public ProductSnapshot() {
+
+    }
+    public ProductSnapshot(Product product) {
+       this.createTime = product.getCreateTime();
+       this.dataStatus = product.getDataStatus();
+       this.fkProductId = product.getPkId();
+       this.itemDesc = product.getItemDesc();
+       this.md5 = product.getMd5();
+       this.name = product.getName();
+       this.picUrl = product.getPicUrl();
+       this.price = product.getPrice();
+       this.remark = product.getRemark();
+       this.title = product.getTitle();
+       this.updateTime = product.getUpdateTime();
     }
 }

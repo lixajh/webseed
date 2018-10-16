@@ -7,11 +7,16 @@ import com.peake.webseed.core.Result;
 import com.peake.webseed.core.ResultGenerator;
 import com.peake.webseed.feature.product.enums.EnumProductDataStatus;
 import com.peake.webseed.feature.product.model.Product;
+import com.peake.webseed.feature.product.model.ProductSnapshot;
 import com.peake.webseed.feature.product.service.ProductService;
+import com.peake.webseed.feature.product.service.ProductSnapshotService;
 import com.peake.webseed.utils.VerifyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
@@ -27,6 +32,8 @@ public class ProductManagerController extends AbstractController  {
 
     @Resource
     private ProductService productService;
+    @Resource
+    private ProductSnapshotService productSnapshotService;
 
     @PostMapping("/add")
     public Result add(Product product) {
@@ -34,6 +41,7 @@ public class ProductManagerController extends AbstractController  {
             return ResultGenerator.genFailResult(EnumErrorCode.PARAM_ERROR);
         }
             productService.add(product);
+
         return ResultGenerator.genSuccessResult();
     }
 
@@ -56,6 +64,14 @@ public class ProductManagerController extends AbstractController  {
     @PostMapping("/update")
     public Result update(Product product) {
         productService.update(product);
+        Product newProduct = productService.findById(product.getPkId());
+        if (!newProduct.calMd5().equals(newProduct.getMd5())){
+            //如果新旧的md5不同，更新md5并增加快照
+            newProduct.setMd5(newProduct.calMd5());
+            productService.update(product);
+            productSnapshotService.add(new ProductSnapshot(newProduct));
+        }
+
         return ResultGenerator.genSuccessResult();
     }
 

@@ -1,6 +1,7 @@
 package com.peake.webseed.core;
 
 import com.github.pagehelper.PageInfo;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import tk.mybatis.mapper.entity.Condition;
 
@@ -26,4 +27,5 @@ public interface Service<T> {
     PageInfo findbyCustomPage(Integer page, Integer size, T o);
     PageInfo findMapByCustomPage(Integer page, Integer size, HashMap<String,Object> o);
     Result add(T model);
+    List<T> findByCustomCondition(@Param("obj") T o);
 }

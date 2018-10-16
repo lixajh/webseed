@@ -7,6 +7,7 @@ import com.peake.webseed.common.redis.CacheService;
 import com.peake.webseed.feature.admin.model.Admin;
 import com.peake.webseed.feature.member.service.MemberPlusService;
 import com.peake.webseed.utils.DateUtils;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.entity.Condition;
@@ -120,6 +121,9 @@ public abstract class AbstractService<T> implements Service<T> {
         return pageInfo;
     }
 
+    public List<T> findByCustomCondition(@Param("obj") T o){
+        return mapper.findByCustomCondition(o);
+    }
     @Override
     public PageInfo findMapByCustomPage(Integer page, Integer size, HashMap<String, Object> o) {
         PageHelper.startPage(page, size);

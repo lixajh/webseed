@@ -21,9 +21,9 @@ import javax.annotation.Resource;
 @RestController
 
 @RequestMapping("/manager/product")
-public class ProductController extends AbstractController  {
+public class ProductManagerController extends AbstractController  {
 
-    Logger logger = LoggerFactory.getLogger(ProductController.class);
+    Logger logger = LoggerFactory.getLogger(ProductManagerController.class);
 
     @Resource
     private ProductService productService;

@@ -38,7 +38,5 @@ public enum EnumPayStatus {
 			}
 		}
 		return null;
-
 	}
-	
 }

@@ -10,6 +10,12 @@ public class CodeUtils {
         n+=createDigitCode(6);
         return n;
     }
+    public static String genPicName(){
+
+        String n = DateUtils.format(new Date(), "yyyyMMddHHmmssSSS");
+        n+=createDigitCode(4);
+        return n;
+    }
 
 
     /**

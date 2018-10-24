@@ -4,10 +4,7 @@ import com.peake.webseed.utils.JSONUtils;
 import com.peake.webseed.utils.PasswordUtils;
 import org.springframework.beans.BeanUtils;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -61,6 +58,9 @@ public class Product {
      */
     @Column(name = "pic_url")
     private String picUrl;
+    @Transient
+    private String picFullUrl;
+
 
     /**
      * 将本字段置为空的所有字段转换为json后，取md5值
@@ -242,6 +242,15 @@ public class Product {
      */
     public String getMd5() {
         return md5;
+    }
+
+    public String getPicFullUrl() {
+        return picFullUrl;
+    }
+
+    public void setPicFullUrl(String picFullUrl) {
+
+        this.picFullUrl = picFullUrl;
     }
 
     /**

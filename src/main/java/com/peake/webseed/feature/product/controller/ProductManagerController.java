@@ -11,9 +11,11 @@ import com.peake.webseed.feature.product.model.ProductSnapshot;
 import com.peake.webseed.feature.product.service.ProductService;
 import com.peake.webseed.feature.product.service.ProductSnapshotService;
 import com.peake.webseed.utils.DateUtils;
+import com.peake.webseed.utils.StringUtils;
 import com.peake.webseed.utils.VerifyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,9 +29,12 @@ import javax.annotation.Resource;
 @RestController
 
 @RequestMapping("/manager/product")
-public class ProductManagerController extends AbstractController  {
+public class ProductManagerController extends AbstractController {
 
     Logger logger = LoggerFactory.getLogger(ProductManagerController.class);
+
+    @Value("${file.accessPath}")
+    private String accessPath;
 
     @Resource
     private ProductService productService;
@@ -38,10 +43,10 @@ public class ProductManagerController extends AbstractController  {
 
     @PostMapping("/add")
     public Result add(Product product) {
-        if (!VerifyUtils.verifyAllParamsNotNull(product.getTitle(),product.getName(),product.getPrice())){
+        if (!VerifyUtils.verifyAllParamsNotNull(product.getTitle(), product.getName(), product.getPrice())) {
             return ResultGenerator.genFailResult(EnumErrorCode.PARAM_ERROR);
         }
-            productService.add(product);
+        productService.add(product);
 
         return ResultGenerator.genSuccessResult();
     }
@@ -51,11 +56,13 @@ public class ProductManagerController extends AbstractController  {
         productService.updateStatusByIds(ids, EnumProductDataStatus.del.getValue());
         return ResultGenerator.genSuccessResult();
     }
+
     @PostMapping("/startSell")
     public Result startSell(@RequestParam Long[] ids) {
         productService.updateStatusByIds(ids, EnumProductDataStatus.saling.getValue());
         return ResultGenerator.genSuccessResult();
     }
+
     @PostMapping("/stopSell")
     public Result stopSell(@RequestParam Long[] ids) {
         productService.updateStatusByIds(ids, EnumProductDataStatus.not_sale.getValue());
@@ -69,7 +76,7 @@ public class ProductManagerController extends AbstractController  {
         Product newProduct = productService.findById(product.getPkId());
         String a = newProduct.calMd5();
         System.out.println(a);
-        if (!newProduct.calMd5().equals(newProduct.getMd5())){
+        if (!newProduct.calMd5().equals(newProduct.getMd5())) {
             //如果新旧的md5不同，更新md5并增加快照
             newProduct.setMd5(newProduct.calMd5());
             productService.update(newProduct);
@@ -82,12 +89,16 @@ public class ProductManagerController extends AbstractController  {
     @PostMapping("/detail")
     public Result detail(@RequestParam Long id) {
         Product product = productService.findById(id);
+        if (StringUtils.isNotBlank(product.getPicUrl())){
+            product.setPicFullUrl(accessPath + product.getPicUrl());
+        }
+
         return ResultGenerator.genSuccessResult(product);
     }
 
     @PostMapping("/list")
     public Result list(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size, Product product) {
-        PageInfo pageInfo = productService.findbyCustomPage(page,size,product);
+        PageInfo pageInfo = productService.findbyCustomPage(page, size, product);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 }

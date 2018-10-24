@@ -49,5 +49,5 @@ spring:
         # 连接池最大阻塞等待时间（使用负值表示没有限制）
         max-wait: -1
 file:
-  savePath: C:\peakecloud\ideaWorkspace4\webseed\image\
-  accessPath: http://app.peake.com.cn/PeakeCloud/manager-static/image/
+  savePath: C:\peakecloud\ideaWorkspace4\webseed\src\main\resources\image\
+  accessPath: http://peake.mynatapp.cc/server/file/

@@ -100,8 +100,12 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/mobile/member/toAuth", "anon");
         filterChainDefinitionMap.put("/s/s/**", "anon");
         filterChainDefinitionMap.put("/manager/pay/alipay/notify", "anon");//支付宝支付成功回调地址
-        filterChainDefinitionMap.put("/manager/merchantchart/gen", "anon");//todo 测试用，生产环境删除
+        filterChainDefinitionMap.put("/manager/merchantchart/gen", "anon");//todo 产生商家月报表，测试用，生产环境删除
         filterChainDefinitionMap.put("/file/**", "anon");//文件上传下载
+        filterChainDefinitionMap.put("/swagger-ui.html", "anon");//swagger资源
+        filterChainDefinitionMap.put("/swagger-resources/**", "anon");//swagger资源
+        filterChainDefinitionMap.put("/v2/api-docs", "anon");//swagger资源
+        filterChainDefinitionMap.put("/webjars/springfox-swagger-ui/**", "anon");//swagger资源
         filterChainDefinitionMap.put("/**", "authc");
 //        filterChainDefinitionMap.put("/**", "anon");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
